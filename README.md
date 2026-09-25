@@ -12,6 +12,27 @@ TriRepo is a three-check clinic for one codebase.
 
 ---
 
+## Using TriRepo in 4 steps
+
+1. **Open the UI** — go to `http://localhost:4000` (or the deployed URL).
+2. **Try any public GitHub repo** — paste a `https://github.com/owner/repo` URL
+   into the top bar and click **Run Lies check**. TriRepo fetches the README,
+   CONTRIBUTING.md, and package.json directly from GitHub and checks for
+   script-name lies, wrong Node version claims, and port mismatches. No AI,
+   no signup, instant results.
+3. **See what a deep Bob analysis looks like** — click **Load demo**. This loads
+   the full IBM Bob 2.0 analysis of the `patient/` repo: 11 documentation
+   contradictions found (LIES tab), a real crash diagnosed from a stack trace
+   alone (CRASH tab), and 4 Express 5 breaking changes mapped with verified
+   reproduction output (BUMP tab).
+4. **Run it yourself locally** — see Quick Start below.
+
+> **Judges:** click **Load demo** to see the full Bob-backed analysis. The live
+> Lies check on any arbitrary repo is a real feature — try it on this repo:
+> `https://github.com/YOUR_USERNAME/TriRepo`.
+
+---
+
 ## Quick Start
 
 ### 1. Run the patient app
