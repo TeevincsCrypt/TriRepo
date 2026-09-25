@@ -1,0 +1,29 @@
+POST /api/v1/invoices HTTP/1.1
+Host: localhost:3002
+Content-Type: application/json
+
+{
+  "clientId": "a4d0f9ea-2183-4798-9429-ec14e5de711f",
+  "invoiceNumber": "INV-CRASH-001",
+  "issuedAt": "2024-03-01",
+  "items": [{ "description": "Crash test", "quantity": 1, "unitPrice": 100 }]
+}
+
+---  RESPONSE  ---
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/json
+
+{"error":"INTERNAL_ERROR","message":"Cannot read properties of undefined (reading 'toLowerCase')"}
+
+---  SERVER STDERR  ---
+[ERROR] TypeError: Cannot read properties of undefined (reading 'toLowerCase')
+    at calcDueDate (file:///C:/Users/Teevincs%20Crypt/TriRepo/patient/src/services/dateService.js:39:28)
+    at Module.createInvoiceRecord (file:///C:/Users/Teevincs%20Crypt/TriRepo/patient/src/services/invoiceService.js:48:31)
+    at file:///C:/Users/Teevincs%20Crypt/TriRepo/patient/src/routes/invoices.js:53:27
+    at Layer.handle [as handle_request] (C:\Users\Teevincs Crypt\TriRepo\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teevincs Crypt\TriRepo\node_modules\express\lib\router\route.js:149:13)
+    at validate (file:///C:/Users/Teevincs%20Crypt/TriRepo/patient/src/middleware/validate.js:15:3)
+    at Layer.handle [as handle_request] (C:\Users\Teevincs Crypt\TriRepo\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Teevincs Crypt\TriRepo\node_modules\express\lib\router\route.js:149:13)
+    at middleware (C:\Users\Teevincs Crypt\TriRepo\node_modules\express-validator\lib\middlewares\check.js:16:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

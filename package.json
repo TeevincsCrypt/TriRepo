@@ -1,0 +1,16 @@
+{
+  "name": "trirepo",
+  "version": "1.0.0",
+  "description": "Three-check clinic for one codebase. One repo in. Three truths out.",
+  "private": true,
+  "workspaces": [
+    "app",
+    "patient"
+  ],
+  "scripts": {
+    "ui": "npm --workspace=app start",
+    "patient": "npm --workspace=patient start",
+    "test:patient": "npm --workspace=patient test"
+  },
+  "license": "MIT"
+}

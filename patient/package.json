@@ -1,0 +1,35 @@
+{
+  "name": "vaultline",
+  "version": "2.3.1",
+  "description": "Vaultline Invoice Management API",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src tests",
+    "build": "echo 'No build step required for Node.js'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-validator": "^7.0.1",
+    "uuid": "^9.0.1",
+    "date-fns": "^3.3.1",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "vitest": "^1.3.1",
+    "supertest": "^6.3.4",
+    "@vitest/coverage-v8": "^1.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
