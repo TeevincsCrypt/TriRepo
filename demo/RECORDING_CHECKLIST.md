@@ -74,4 +74,5 @@
 
 ---
 
-*All analysis and code changes produced with IBM Bob 2.0*
+*All analysis and patient/ code changes produced with IBM Bob 2.0. The live Crash and
+Bump tools were added with Claude Code after the Bob allowance ran out (see HACKATHON.md).*

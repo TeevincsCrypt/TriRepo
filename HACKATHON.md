@@ -47,11 +47,14 @@ Full ground truth is in `patient/PLANTED.md`.
 
 ## How IBM Bob 2.0 Drove This
 
-Every file in this repository — source code, tests, reports, prompts, UI, and docs —
-was produced by IBM Bob 2.0 operating as the sole coding agent.
+IBM Bob 2.0 was the coding agent for the whole core of this project: the patient app,
+its tests and planted issues, all three analysis passes and their reports, every fix and
+patch in `patient/`, the prompts, the docs, the TriRepo UI and the live Lies check.
 
-> **All source in this repository was produced in IBM Bob 2.0. No other coding
-> agent authored files in this repo.**
+> **One exception, stated plainly:** after the Bob usage allowance ran out, the live
+> Crash and Bump tools in the UI were written with Claude Code (Anthropic). They are
+> listed file by file under [After Bob: live Crash and Bump tools](#after-bob-live-crash-and-bump-tools).
+> Nothing in `reports/` or `patient/` was touched by them.
 
 ### Pass 0 — Scaffold (Plan + Agent modes)
 
@@ -149,7 +152,8 @@ Wrote `reports/bump.md` and `patient/UPGRADE.md`.
 The UI (`app/server.js`) is a server-rendered Express app that reads `reports/*.md`
 at request time, converts them to HTML with `marked`, and presents them in three
 tabs. Bob wrote the UI in Pass 0 and it renders the live report files with no
-rebuild step.
+rebuild step. The live Crash and Bump tools on top of it came later; see
+[After Bob](#after-bob-live-crash-and-bump-tools).
 
 ---
 
@@ -214,11 +218,30 @@ Key shots to capture:
 
 ---
 
+## After Bob: live Crash and Bump tools
+
+Bob built the live Lies check. Its first attempt at live Crash and Bump tools broke the
+page and was reverted (commit `a11a8f0`), and the Bob usage allowance ran out before it
+could be fixed. The replacements were then written with Claude Code:
+
+| File | What it is |
+|------|-----------|
+| `app/public/live-tools.js` | **Crash:** parses a pasted stack trace (Node, Python, Java, Go, Ruby), matches frames to files in a public GitHub repo, shows the code at the failing line, and applies simple pattern rules to the error message. **Bump:** reads `package.json` (including workspaces), compares every dependency with the latest version on npm, flags major-version gaps, and finds where a package is imported and used. |
+| `app/public/live-tools.css` | Styles for the two tools, plus a small-screen fix for wide report tables. |
+| `app/server.js` (small edits) | Serves `app/public/`, adds `/api/sample-trace`, lets the existing proxy also reach `registry.npmjs.org`, adds the two tool placeholders, and updates the top-bar hint, button label and footer. |
+
+Both tools are deterministic (no AI) and are labelled **LIVE** in the UI. Bob's deep
+passes remain the **DEMO** sections under each tab, unchanged.
+
+---
+
 ## Authorship Statement
 
-All source in this repository was produced in IBM Bob 2.0. No other coding agent
-authored files in this repo. The operator approved edits, ran commands in the
-terminal, and captured screenshots — no code or analysis was written by hand.
+IBM Bob 2.0 produced all the analysis and every code change in `patient/`, plus the
+reports, prompts, docs, the TriRepo UI and the live Lies check. The live Crash and Bump
+tools (`app/public/` and the `app/server.js` edits listed above) were written with
+Claude Code after the Bob allowance ran out. The operator approved edits, ran commands
+in the terminal, and captured screenshots. No code or analysis was written by hand.
 
 ---
 

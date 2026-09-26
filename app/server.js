@@ -8,6 +8,11 @@ const { marked } = require('marked');
 const app = express();
 const PORT = process.env.PORT || 4000;
 const REPORTS_DIR = path.resolve(__dirname, '../reports');
+const PATIENT_DIR = path.resolve(__dirname, '../patient');
+
+// Live Crash/Bump tools: plain static files, kept out of the page template
+// below so their regexes need no double-escaping.
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Configure marked for safe rendering
 marked.setOptions({ gfm: true, breaks: false });
@@ -23,8 +28,11 @@ function readReport(name) {
 }
 
 // ── Proxy route ──────────────────────────────────────────────────────────────
-// Allows the browser to fetch raw.githubusercontent.com files when a direct
-// fetch fails due to CORS or network restrictions. Only proxies that host.
+// Allows the browser to fetch public GitHub files and npm registry metadata
+// when a direct fetch fails due to CORS or network restrictions. Only proxies
+// these exact hosts, over https.
+const PROXY_HOSTS = new Set(['raw.githubusercontent.com', 'registry.npmjs.org']);
+
 app.get('/api/proxy', async (req, res) => {
   const { url } = req.query;
   if (!url) return res.status(400).json({ error: 'url param required' });
@@ -33,8 +41,8 @@ app.get('/api/proxy', async (req, res) => {
   try { parsed = new URL(url); } catch {
     return res.status(400).json({ error: 'invalid url' });
   }
-  if (parsed.hostname !== 'raw.githubusercontent.com') {
-    return res.status(403).json({ error: 'only raw.githubusercontent.com is proxied' });
+  if (parsed.protocol !== 'https:' || !PROXY_HOSTS.has(parsed.hostname)) {
+    return res.status(403).json({ error: 'only raw.githubusercontent.com and registry.npmjs.org are proxied' });
   }
 
   try {
@@ -48,6 +56,15 @@ app.get('/api/proxy', async (req, res) => {
   } catch (err) {
     res.status(502).json({ error: 'proxy fetch failed', detail: err.message });
   }
+});
+
+// ── Sample trace for the live Crash tool ──────────────────────────────────────
+app.get('/api/sample-trace', (req, res) => {
+  fs.readFile(path.join(PATIENT_DIR, 'CRASH.txt'), 'utf8', (err, text) => {
+    if (err) return res.status(404).json({ error: 'sample trace not found' });
+    res.set('Content-Type', 'text/plain; charset=utf-8');
+    res.send(text);
+  });
 });
 
 // ── Main page ─────────────────────────────────────────────────────────────────
@@ -281,6 +298,7 @@ app.get('/', (req, res) => {
       margin-top: 40px;
     }
   </style>
+  <link rel="stylesheet" href="/static/live-tools.css">
 </head>
 <body>
 
@@ -289,12 +307,13 @@ app.get('/', (req, res) => {
     <div class="top-bar-row">
       <div class="logo">Tri<span>Repo</span></div>
       <input id="gh-url" type="url" placeholder="https://github.com/owner/repo — public repos only" autocomplete="off" spellcheck="false" />
-      <button class="btn btn-primary" id="run-btn" onclick="runLive()">Run Lies check</button>
+      <button class="btn btn-primary" id="run-btn" onclick="runLive()">Run checks</button>
       <button class="btn" onclick="loadDemo()">Load demo</button>
     </div>
     <p class="top-bar-hint">
-      Instant check runs in the browser on README + package.json (pattern-matching, no AI).
-      Deep Crash/Bump analysis is IBM Bob on the full repo — see <a href="#" onclick="loadDemo();return false;">Load demo</a>.
+      Live checks run in your browser, no AI: Lies compares README + package.json, Crash turns a pasted stack trace into the failing line,
+      Bump flags dependencies a major version behind and finds where they're used.
+      The deep analysis of patient/ is IBM Bob. See <a href="#" onclick="loadDemo();return false;">Load demo</a>.
     </p>
     <div id="status-bar"></div>
   </div>
@@ -332,6 +351,7 @@ app.get('/', (req, res) => {
 
   <!-- ── CRASH panel ──────────────────────────────────────────────────── -->
   <div id="crash" class="tab-panel crash-panel">
+    <section id="crash-live" class="live-tool"></section>
     <div id="crash-label" class="source-label demo-label">
       <strong>DEMO</strong>
       <span>Bob deep pass · patient/ · full repo analysis by IBM Bob 2.0</span>
@@ -341,6 +361,7 @@ app.get('/', (req, res) => {
 
   <!-- ── BUMP panel ───────────────────────────────────────────────────── -->
   <div id="bump" class="tab-panel bump-panel">
+    <section id="bump-live" class="live-tool"></section>
     <div id="bump-label" class="source-label demo-label">
       <strong>DEMO</strong>
       <span>Bob deep pass · patient/ · full repo analysis by IBM Bob 2.0</span>
@@ -349,7 +370,8 @@ app.get('/', (req, res) => {
   </div>
 
   <footer>
-    Analysis and code changes produced with IBM Bob 2.0
+    Deep analysis of patient/ and every patient/ code change: IBM Bob 2.0 ·
+    Live Crash and Bump tools: added with Claude Code after the Bob allowance ran out (see HACKATHON.md)
   </footer>
 
   <script>
@@ -681,6 +703,7 @@ app.get('/', (req, res) => {
       if (e.key === 'Enter') runLive();
     });
   </script>
+  <script src="/static/live-tools.js"></script>
 
 </body>
 </html>`;

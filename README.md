@@ -16,10 +16,16 @@ TriRepo is a three-check clinic for one codebase.
 
 1. **Open the UI** — go to `http://localhost:4000` (or the deployed URL).
 2. **Try any public GitHub repo** — paste a `https://github.com/owner/repo` URL
-   into the top bar and click **Run Lies check**. TriRepo fetches the README,
-   CONTRIBUTING.md, and package.json directly from GitHub and checks for
-   script-name lies, wrong Node version claims, and port mismatches. No AI,
-   no signup, instant results.
+   into the top bar and click **Run checks**. Everything runs in your browser,
+   with no AI and no signup:
+   - **Lies** fetches the README, CONTRIBUTING.md and package.json and checks for
+     script-name lies, wrong Node version claims, and port mismatches.
+   - **Crash**: paste a stack trace. TriRepo separates your code from dependency
+     frames, opens the failing line on GitHub, and applies simple pattern rules to
+     the error. Click **Use the patient/ crash** for a one-click example.
+   - **Bump** compares every dependency (including workspaces) with the latest
+     version on npm, flags major-version gaps, and **Find usages** lists every file
+     and line that imports a package.
 3. **See what a deep Bob analysis looks like** — click **Load demo**. This loads
    the full IBM Bob 2.0 analysis of the `patient/` repo: 11 documentation
    contradictions found (LIES tab), a real crash diagnosed from a stack trace
@@ -28,8 +34,8 @@ TriRepo is a three-check clinic for one codebase.
 4. **Run it yourself locally** — see Quick Start below.
 
 > **Judges:** click **Load demo** to see the full Bob-backed analysis. The live
-> Lies check on any arbitrary repo is a real feature — try it on this repo:
-> `https://github.com/YOUR_USERNAME/TriRepo`.
+> checks work on any public repo. Try them on this one:
+> `https://github.com/TeevincsCrypt/TriRepo`.
 
 ---
 
@@ -73,6 +79,7 @@ trirepo/
   HACKATHON.md               ← hackathon context and judging notes
   package.json               ← root workspace config
   app/                       ← TriRepo UI (one page, three tabs)
+    public/                  ← live Crash + Bump tools (browser-side)
   patient/                   ← sample app being analyzed
   reports/
     lies.md                  ← LIES analysis output
@@ -128,7 +135,10 @@ See `patient/README.md` for its own documentation (which contains some deliberat
 
 ---
 
-## Analysis produced with IBM Bob 2.0
+## Built with IBM Bob 2.0
 
-All analysis reports, code fixes, tests, and documentation in this repository
-were produced by IBM Bob 2.0 during a 48-hour lablab.ai hackathon.
+All analysis reports, patient/ code fixes, tests, and documentation in this
+repository were produced by IBM Bob 2.0 during a 48-hour lablab.ai hackathon,
+along with the TriRepo UI and its live Lies check. After the Bob usage allowance
+ran out, the live Crash and Bump tools (`app/public/`) were added with Claude Code.
+The details are in [HACKATHON.md](HACKATHON.md#after-bob-live-crash-and-bump-tools).
