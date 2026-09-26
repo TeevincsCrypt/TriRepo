@@ -1,6 +1,8 @@
 # TriRepo × IBM Bob 2.0
 
 > **lablab.ai × IBM Bob 2.0 — 48-hour hackathon submission**
+>
+> **Live demo:** [trirepo-ui-production.up.railway.app](https://trirepo-ui-production.up.railway.app/)
 
 ---
 

@@ -11,6 +11,8 @@
 
 **One repo in. Three truths out.**
 
+**Live demo: [trirepo-ui-production.up.railway.app](https://trirepo-ui-production.up.railway.app/)**
+
 TriRepo checks a codebase for the three things that quietly cost teams hours: docs
 that lie about the code, crashes nobody can reproduce, and upgrades that break more
 than they should. It was built for the IBM Bob 2.0 hackathon on lablab.ai.
@@ -29,14 +31,15 @@ planted problems.
 
 ## Try it
 
-1. **Open TriRepo.** Locally that's `http://localhost:4000` (see [Run it locally](#run-it-locally)).
-   The landing page is at `/`; the tool itself, the clinic, is at `/app`.
+1. **Open TriRepo** at the [live demo](https://trirepo-ui-production.up.railway.app/), or locally at `http://localhost:4000`
+   (see [Run it locally](#run-it-locally)). The landing page is at `/`; the tool
+   itself, the clinic, is at `/app`.
 2. **Paste a public GitHub repo** and click **Run checks**. Lies runs straight away and
    Bump warms up in the background. For Crash, paste a stack trace into the Crash tab.
 3. **Read Bob's deep pass.** Click **See the Bob demo** on the landing page, or
    **Load demo** in the clinic.
 
-> **Judges:** start on the landing page, then click **See the Bob demo**. For live
+> **Judges:** start on the [landing page](https://trirepo-ui-production.up.railway.app/), then click **See the Bob demo**. For live
 > runs, the landing page has one-click links: **Try the sample crash** and
 > **Scan this repo**. Or paste this repo into the box:
 > `https://github.com/TeevincsCrypt/TriRepo`.
@@ -171,7 +174,7 @@ screenshots; no code was written by hand.
 
 Any Node host works. Deploy the whole repo, since the server reads `../reports` and
 `../patient`. Run `npm install`, then start it with `npm run ui`. The server listens on
-`$PORT` and defaults to 4000. The live demo runs on Railway.
+`$PORT` and defaults to 4000. The [live demo](https://trirepo-ui-production.up.railway.app/) runs on Railway.
 
 ---
 
