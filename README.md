@@ -11,7 +11,8 @@
 
 **One repo in. Three truths out.**
 
-**Live demo: [trirepo-ui-production.up.railway.app](https://trirepo-ui-production.up.railway.app/)**
+**Live demo: [trirepo-ui-production.up.railway.app](https://trirepo-ui-production.up.railway.app/)** &middot;
+**[Whitepaper (PDF)](docs/TriRepo-Whitepaper.pdf)**
 
 TriRepo checks a codebase for the three things that quietly cost teams hours: docs
 that lie about the code, crashes nobody can reproduce, and upgrades that break more
