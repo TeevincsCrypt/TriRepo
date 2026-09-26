@@ -203,18 +203,16 @@ report file and refreshing the browser shows the updated content immediately.
 
 ## Session Screenshots
 
-Screenshots of Bob task sessions are in `bob_sessions/`. See `bob_sessions/README.md`
-for the full index and capture instructions.
+All 13 screenshots are in `bob_sessions/`, grouped by pass with a caption for each in
+[bob_sessions/README.md](bob_sessions/README.md). The key ones:
 
-Key shots to capture:
-
-| File | What to show |
+| File | What it shows |
 |------|-------------|
-| `pass1_lies_analysis.png` | Bob's parallel subagents in the same task turn |
-| `pass2_crash_test.png` | The failing CRASH-001 test being written from the stack trace |
-| `pass2_crash_fix.png` | `35/35` green after the fix |
-| `pass3_bump_callsites.png` | The scratch_express5 test harness output showing 4 confirmed breaks |
-| `ui_demo.png` | Browser at http://localhost:4000 — all three tabs |
+| [`pass0_scaffold.PNG`](bob_sessions/pass0_scaffold.PNG) | Pass 0 finished: 13/13 tasks, 43 files changed, PLANTED.md held back |
+| [`pass1_lies_todo.PNG`](bob_sessions/pass1_lies_todo.PNG) | Pass 1's two parallel subagents, one for docs and one for code |
+| [`pass2_crash_red.PNG`](bob_sessions/pass2_crash_red.PNG) | The CRASH-001 tests failing before the fix (RED) |
+| [`pass2_crash_green.PNG`](bob_sessions/pass2_crash_green.PNG) | Both tests passing after the fix, then the full suite at 35/35 |
+| [`pass3_bump_proof.PNG`](bob_sessions/pass3_bump_proof.PNG) | Four Express 5 breaks reproduced with real error output |
 
 ---
 
