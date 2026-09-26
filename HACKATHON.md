@@ -240,6 +240,7 @@ Also written with Claude Code, after the tools above:
 |------|-----------|
 | `app/public/landing.html`, `app/public/landing.css` | The landing page at `/`: what TriRepo is, the three checks, how the live checks and Bob's deep pass differ, and a repo box that runs the checks. Every number on it comes from Bob's reports. |
 | `app/public/site.css`, `app/public/app.css`, `app/public/favicon.svg` | The white-and-green design shared by both pages. It replaces the dark inline styles Bob wrote in Pass 0 and keeps every id and class the page's script uses. |
+| `app/public/theme.js` | The light/dark toggle in the top bar of both pages. Light is the default; the choice is remembered in the browser. |
 | `app/server.js` (small edits) | Serves the landing page at `/` and moves the three-tab tool to `/app`, with the new navigation and footer around it. Bob's inline script, including the live Lies check, is unchanged. |
 
 ---

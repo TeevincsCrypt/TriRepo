@@ -12,7 +12,7 @@
   padding: 1px 6px;
   border-radius: 6px;
   background: var(--surface-2);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 13px;
 }
 
@@ -130,12 +130,12 @@
   padding: 1px 5px;
   border-radius: 5px;
   background: var(--surface);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 12px;
 }
-.source-label.demo-label strong { background: var(--ink); color: #fff; }
+.source-label.demo-label strong { background: var(--ink); color: var(--ink-fg); }
 .source-label.live-label { background: var(--green-50); border-color: var(--green-200); }
-.source-label.live-label strong { background: var(--green-600); color: #fff; }
+.source-label.live-label strong { background: var(--green-600); color: var(--on-green); }
 
 /* ── Bob's reports (markdown) ────────────────────────────── */
 .md-body { color: var(--text); font-size: 15px; line-height: 1.7; }
@@ -168,7 +168,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--surface-2);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 12.5px;
 }
 .md-body pre {
@@ -176,6 +176,7 @@
   padding: 16px 18px;
   overflow-x: auto;
   border-radius: 12px;
+  border: 1px solid var(--code-border);
   background: var(--code-bg);
   color: var(--code-text);
 }
@@ -222,7 +223,7 @@
 .md-body td, .live-results td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .md-body tr:last-child td, .live-results tr:last-child td { border-bottom: 0; }
 .md-body th + th, .md-body td + td, .live-results th + th, .live-results td + td { border-left: 1px solid var(--border); }
-.md-body tbody tr:hover td, .live-results tbody tr:hover td { background: #fafcfb; }
+.md-body tbody tr:hover td, .live-results tbody tr:hover td { background: var(--row-hover); }
 
 /* ── Live Lies results (rendered by the page script) ─────── */
 .live-results { margin-top: 4px; }
@@ -231,7 +232,7 @@
   padding: 1px 6px;
   border-radius: 6px;
   background: var(--surface-2);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 12.5px;
 }
 .verdict-lie, .verdict-ok, .verdict-skip {

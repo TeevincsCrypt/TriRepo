@@ -19,7 +19,7 @@
   right: 0;
   bottom: 0;
   height: 260px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff 70%);
+  background: linear-gradient(to bottom, transparent, var(--surface) 70%);
   pointer-events: none;
 }
 
@@ -199,7 +199,7 @@
   padding: 1px 5px;
   border-radius: 5px;
   background: var(--surface-2);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 12.5px;
 }
 
@@ -224,7 +224,7 @@
   font-weight: 600;
   text-decoration: none;
 }
-.proof-link:hover { color: var(--green-900); text-decoration: underline; }
+.proof-link:hover { color: var(--link-hover); text-decoration: underline; }
 
 /* ── Sections ────────────────────────────────────────────── */
 .section { max-width: 1080px; margin: 0 auto; padding: 104px 20px 0; scroll-margin-top: 20px; }
@@ -283,7 +283,7 @@
   font-weight: 600;
   text-decoration: none;
 }
-.check-link:hover { color: var(--green-900); }
+.check-link:hover { color: var(--link-hover); }
 .check-link span { transition: transform 0.15s; }
 .check-link:hover span { transform: translateX(3px); }
 
@@ -306,7 +306,7 @@
 .how-card ul { display: grid; gap: 12px; margin-top: 20px; list-style: none; }
 .how-card li { display: flex; gap: 10px; font-size: 15px; }
 .how-card li svg { flex: none; width: 18px; height: 18px; margin-top: 3px; color: var(--green-600); }
-.how-card.deep { background: var(--green-900); border-color: var(--green-900); color: #eaf6ee; }
+.how-card.deep { background: var(--deep-bg); border-color: var(--deep-border); color: #eaf6ee; }
 .how-card.deep .how-kicker { color: var(--green-400); }
 .how-card.deep > p { color: #b5d3c1; }
 .how-card.deep li svg { color: var(--green-400); }
@@ -325,7 +325,7 @@
 .cta-inner {
   padding: 60px 24px;
   text-align: center;
-  background: radial-gradient(120% 140% at 50% 0%, var(--green-100) 0%, var(--green-50) 45%, #fff 100%);
+  background: var(--cta-bg);
   border: 1px solid var(--green-200);
   border-radius: 28px;
 }
@@ -368,3 +368,6 @@
   .cta { margin-top: 80px; }
   .nav-github { display: none; }
 }
+
+/* Ring colour follows the theme (CSS beats the SVG attribute). */
+.hero-rings .rings { stroke: var(--ring); }

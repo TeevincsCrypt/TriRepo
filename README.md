@@ -1,5 +1,10 @@
 <p align="center">
-  <img src="docs/images/landing.png" alt="The TriRepo landing page: One repo in. Three truths out." width="880">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/landing-dark.png">
+    <img src="docs/images/landing.png" alt="The TriRepo landing page: One repo in. Three truths out." width="880">
+  </picture>
+  <br>
+  <sub>The landing page. Paste a public GitHub repo and click <b>Run checks</b>, or open IBM Bob's deep pass on the sample repo. Light and dark themes; the toggle is in the top bar.</sub>
 </p>
 
 # TriRepo
@@ -68,6 +73,11 @@ npm run test:patient   # the patient app's test suite: 35 of 35 pass
 
 <img src="docs/images/crash.png" alt="The live Crash tool tracing the patient crash to dateService.js" width="720">
 
+*The live Crash tool on the sample trace. It names the error, works out that `terms`
+was undefined, and shows the code at the failing line: red is the line in the trace,
+amber is where the call sits now. Below that, every frame is split into your code and
+dependencies, each linked to its line on GitHub.*
+
 - **Live:** paste any stack trace. TriRepo separates your code from dependency and
   runtime frames, finds each file in the repo, shows the code at the failing line, and
   applies plain pattern rules to the error. On the sample trace it works out that
@@ -79,6 +89,10 @@ npm run test:patient   # the patient app's test suite: 35 of 35 pass
 ### Bump: upgrade blast radius
 
 <img src="docs/images/bump.png" alt="The live Bump tool listing dependencies a major version behind" width="720">
+
+*The live Bump tool on this repo: 13 dependencies across 3 package.json files, 10 of
+them a major version behind, where breaking changes live. Find usages lists every file
+and line that imports a package.*
 
 - **Live:** reads package.json, following workspaces, compares every dependency with the
   latest version on npm, and flags major-version gaps. **Find usages** lists every file
@@ -134,6 +148,9 @@ screenshots; no code was written by hand.
   `server.js`. There's no database and no login, and nothing is stored.
 - **Deep links:** `/app?repo=<url>` runs the checks, `/app?tab=crash&sample=crash` traces
   the sample crash, and `/app?tab=bump&repo=<url>` scans a repo's dependencies.
+- **Light and dark themes.** Light is the default. The toggle in the top bar switches
+  theme, and the choice is remembered across both pages
+  ([`app/public/theme.js`](app/public/theme.js)).
 
 ### Limits of the live checks
 

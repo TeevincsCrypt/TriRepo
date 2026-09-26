@@ -26,7 +26,7 @@
   padding: 12px 14px;
   resize: vertical;
   overflow: auto;
-  background: #fbfcfb;
+  background: var(--surface-3);
   font: 12.5px/1.55 var(--font);
   white-space: pre;
 }
@@ -41,7 +41,7 @@
   padding: 1px 6px;
   border-radius: 6px;
   background: var(--surface-2);
-  color: var(--green-900);
+  color: var(--code-inline);
   font-size: 12.5px;
 }
 
@@ -50,7 +50,7 @@
 .lt-card {
   margin: 14px 0;
   padding: 16px 18px;
-  background: #fbfcfb;
+  background: var(--surface-3);
   border: 1px solid var(--border);
   border-radius: 14px;
 }
@@ -67,14 +67,14 @@
 .lt-card a { color: var(--green-700); text-decoration: none; }
 .lt-card a:hover { text-decoration: underline; }
 .lt-error { color: var(--red-700); font: 500 13px var(--font); word-break: break-word; }
-.lt-hint { background: var(--amber-50); border-color: #f6e3bf; border-left: 3px solid var(--amber-600); }
+.lt-hint { background: var(--amber-50); border-color: var(--amber-border); border-left: 3px solid var(--amber-600); }
 .lt-hint p { color: var(--text); }
 
 .lt-tag {
   padding: 1px 7px;
   border-radius: 5px;
   background: var(--amber-50);
-  border: 1px solid #f3d9a4;
+  border: 1px solid var(--amber-border);
   color: var(--amber-700);
   font: 700 10px var(--font);
   letter-spacing: 0.04em;
@@ -88,6 +88,7 @@
   padding: 6px 0;
   overflow-x: auto;
   border-radius: 12px;
+  border: 1px solid var(--code-border);
   background: var(--code-bg);
   font: 12.5px/1.65 var(--font);
 }
