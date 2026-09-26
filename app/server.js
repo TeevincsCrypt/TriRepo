@@ -249,54 +249,6 @@ app.get('/', (req, res) => {
 
     .empty { color: var(--muted); font-style: italic; text-align: center; padding: 40px 0; }
 
-    /* ── Crash live input ────────────────────────────────── */
-    .crash-live-section { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
-    .crash-live-section h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    #crash-trace {
-      width: 100%;
-      min-height: 130px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 12px;
-      line-height: 1.5;
-      padding: 10px 12px;
-      resize: vertical;
-      outline: none;
-    }
-    #crash-trace:focus { border-color: var(--accent-crash); }
-    #crash-trace::placeholder { color: var(--muted); }
-    .crash-repo-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-    .crash-repo-row label { font-size: 12px; color: var(--muted); white-space: nowrap; }
-    #crash-repo-url {
-      flex: 1;
-      min-width: 0;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      font-family: var(--font-prose);
-      font-size: 12px;
-      padding: 5px 9px;
-      outline: none;
-    }
-    #crash-repo-url:focus { border-color: var(--accent-crash); }
-    #crash-repo-url::placeholder { color: var(--muted); }
-    .crash-frames-out { margin-top: 14px; }
-    .crash-frames-out table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .crash-frames-out th { background: var(--surface); border: 1px solid var(--border); padding: 6px 10px; text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .crash-frames-out td { border: 1px solid var(--border); padding: 6px 10px; font-family: var(--font); font-size: 12px; vertical-align: middle; }
-    .crash-frames-out tr:hover td { background: rgba(88,166,255,0.04); }
-    .crash-frames-out a { color: var(--accent-active); text-decoration: none; }
-    .crash-frames-out a:hover { text-decoration: underline; }
-    .frame-num { color: var(--muted); font-size: 11px; }
-    .frame-file { color: #e6edf3; }
-    .frame-line { color: var(--accent-crash); font-weight: 600; }
-    .frame-fn   { color: var(--muted); font-size: 11px; }
-    .crash-parse-empty { color: var(--muted); font-size: 12px; font-style: italic; padding: 12px 0; }
-
     /* ── Live results table ───────────────────────────────── */
     .live-results { margin-top: 4px; }
     .live-results table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13px; }
@@ -380,46 +332,20 @@ app.get('/', (req, res) => {
 
   <!-- ── CRASH panel ──────────────────────────────────────────────────── -->
   <div id="crash" class="tab-panel crash-panel">
-
-    <!-- ── LIVE: stack trace parser ── -->
-    <div class="crash-live-section">
-      <div class="source-label live-label" style="margin-bottom:14px;">
-        <strong>LIVE</strong>
-        <span>Parses your pasted trace, locates frames, links to source — does not diagnose the cause</span>
-      </div>
-      <h3>Paste a stack trace</h3>
-      <textarea id="crash-trace" placeholder="Paste a Node.js (or any) stack trace here…
-at calcDueDate (/app/src/services/dateService.js:39:20)
-at createInvoice (/app/src/services/invoiceService.js:48:18)
-TypeError: Cannot read properties of undefined"></textarea>
-      <div class="crash-repo-row">
-        <label for="crash-repo-url">GitHub repo (optional, for source links):</label>
-        <input id="crash-repo-url" type="url" placeholder="https://github.com/owner/repo  — leave blank if you ran a Lies check above" autocomplete="off" spellcheck="false" />
-        <button class="btn" style="border-color:var(--accent-crash);color:var(--accent-crash);" onclick="parseCrash()">Parse</button>
-      </div>
-      <div id="crash-frames-out" class="crash-frames-out"></div>
-    </div>
-
-    <!-- ── DEMO: Bob full analysis ── -->
     <div id="crash-label" class="source-label demo-label">
       <strong>DEMO</strong>
-      <span>Bob deep pass · patient/ · root-cause diagnosis + fix by IBM Bob 2.0</span>
+      <span>Bob deep pass · patient/ · full repo analysis by IBM Bob 2.0</span>
     </div>
-    <div id="crash-demo" class="md-body">${crash}</div>
+    <div class="md-body">${crash}</div>
   </div>
 
   <!-- ── BUMP panel ───────────────────────────────────────────────────── -->
   <div id="bump" class="tab-panel bump-panel">
-
-    <!-- ── LIVE: dependency inventory ── -->
-    <div id="bump-live" class="live-results" style="display:none;"></div>
-
-    <!-- ── DEMO: Bob full analysis ── -->
     <div id="bump-label" class="source-label demo-label">
       <strong>DEMO</strong>
-      <span>Bob deep pass · patient/ · verified Express 4→5 breaking-change analysis by IBM Bob 2.0</span>
+      <span>Bob deep pass · patient/ · full repo analysis by IBM Bob 2.0</span>
     </div>
-    <div id="bump-demo" class="md-body">${bump}</div>
+    <div class="md-body">${bump}</div>
   </div>
 
   <footer>
@@ -439,8 +365,7 @@ TypeError: Cannot read properties of undefined"></textarea>
     // 'demo' = server-rendered Bob reports shown, live results hidden
     // 'live' = live results shown in lies tab, demo still accessible
     let _mode = 'demo';
-    let _liveRepo = null;    // { owner, repo, branch }
-    let _livePkgData = null; // parsed package.json from last Lies check
+    let _liveRepo = null; // { owner, repo, branch }
 
     function setStatus(msg, type) {
       const el = document.getElementById('status-bar');
@@ -457,7 +382,6 @@ TypeError: Cannot read properties of undefined"></textarea>
     function loadDemo() {
       _mode = 'demo';
       _liveRepo = null;
-      _livePkgData = null;
 
       // Lies tab: hide live, show demo
       document.getElementById('lies-live').style.display = 'none';
@@ -465,16 +389,6 @@ TypeError: Cannot read properties of undefined"></textarea>
       setDemoLabel('lies-label');
       setDemoLabel('crash-label');
       setDemoLabel('bump-label');
-
-      // Reset crash live area
-      document.getElementById('crash-trace').value = '';
-      document.getElementById('crash-repo-url').value = '';
-      document.getElementById('crash-frames-out').innerHTML = '';
-
-      // Reset bump live area
-      document.getElementById('bump-live').innerHTML = '';
-      document.getElementById('bump-live').style.display = 'none';
-      document.getElementById('bump-demo').style.display = '';
 
       clearStatus();
       document.getElementById('gh-url').value = '';
@@ -716,8 +630,6 @@ TypeError: Cannot read properties of undefined"></textarea>
 
       const branch = pkgResult.branch;
       _liveRepo = { owner, repo, branch };
-      // Cache parsed package.json for Bump tab
-      try { _livePkgData = JSON.parse(pkgResult.text); } catch (_) { _livePkgData = null; }
 
       setStatus('<span class="spinner"></span>Fetching README + CONTRIBUTING…', 'info');
 
@@ -744,10 +656,9 @@ TypeError: Cannot read properties of undefined"></textarea>
       document.getElementById('lies-live').style.display = '';
       document.getElementById('lies-demo').style.display = 'none';
       setLiveLabel('lies-label', repoSlug, branch);
-      // Crash label stays demo (trace parser is always live, but Bob demo is below)
+      // Crash and Bump still show demo — label them clearly
       setDemoLabel('crash-label');
-      // Bump: render live dep list
-      renderBumpLive(repoSlug, branch);
+      setDemoLabel('bump-label');
 
       // Activate lies tab
       showTab('lies', document.getElementById('tab-lies'));
@@ -765,178 +676,9 @@ TypeError: Cannot read properties of undefined"></textarea>
       document.getElementById('run-btn').disabled = false;
     }
 
-    // ── Render Bump live: dependency inventory ───────────────────────────
-    function renderBumpLive(repoSlug, branch) {
-      const container = document.getElementById('bump-live');
-      const demoEl    = document.getElementById('bump-demo');
-
-      if (!_livePkgData) {
-        container.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:16px 0;">Run a Lies check first to load a repo\'s dependencies here.</p>';
-        container.style.display = '';
-        demoEl.style.display = 'none';
-        // Label
-        const lbl = document.getElementById('bump-label');
-        lbl.className = 'source-label live-label';
-        lbl.innerHTML = '<strong>LIVE</strong><span>Dependency list only — no breaking-change analysis · <code>' + esc(repoSlug) + '</code> · no AI involved</span>';
-        return;
-      }
-
-      const deps    = _livePkgData.dependencies    || {};
-      const devDeps = _livePkgData.devDependencies  || {};
-      const peerDeps = _livePkgData.peerDependencies || {};
-      const allDeps = [
-        ...Object.entries(deps).map(([n,v])    => ({ name: n, version: v, kind: 'dep' })),
-        ...Object.entries(devDeps).map(([n,v]) => ({ name: n, version: v, kind: 'dev' })),
-        ...Object.entries(peerDeps).map(([n,v])=> ({ name: n, version: v, kind: 'peer' })),
-      ];
-
-      let html = '';
-
-      // Label
-      const lbl = document.getElementById('bump-label');
-      lbl.className = 'source-label live-label';
-      lbl.innerHTML = '<strong>LIVE</strong><span>Dependency list only — no breaking-change analysis · <code>' + esc(repoSlug) + '</code> · no AI involved</span>';
-
-      if (allDeps.length === 0) {
-        html = '<p style="color:var(--muted);font-size:13px;padding:16px 0;">No dependencies declared in package.json.</p>';
-      } else {
-        html += '<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">';
-        html += '<strong style="color:var(--text);">' + allDeps.length + ' package' + (allDeps.length===1?'':'s') + '</strong>';
-        html += ' declared in <code>' + esc(repoSlug) + '</code>';
-        if (_livePkgData.name)    html += ' · <code>' + esc(_livePkgData.name) + '</code>';
-        if (_livePkgData.version) html += ' v' + esc(_livePkgData.version);
-        html += '. No upgrade analysis — see Demo for Bob\'s verified Express 4→5 report.</p>';
-
-        html += '<table><thead><tr><th>Package</th><th>Declared range</th><th>Type</th></tr></thead><tbody>';
-        allDeps.forEach(d => {
-          const kindLabel = d.kind === 'dep' ? 'dependency' : d.kind === 'dev' ? 'devDependency' : 'peerDependency';
-          const kindColor = d.kind === 'dep' ? 'var(--text)' : 'var(--muted)';
-          html += '<tr>';
-          html += '<td><code>' + esc(d.name) + '</code></td>';
-          html += '<td><code style="color:var(--accent-bump);">' + esc(d.version) + '</code></td>';
-          html += '<td style="color:' + kindColor + ';font-size:12px;">' + kindLabel + '</td>';
-          html += '</tr>';
-        });
-        html += '</tbody></table>';
-        html += '<p style="margin-top:14px;font-size:11px;color:var(--muted);">Dependency inventory only — declared ranges, not installed versions. No breaking-change analysis. For full upgrade-impact analysis using IBM Bob, see the Demo report below.</p>';
-      }
-
-      container.innerHTML = html;
-      container.style.display = '';
-      demoEl.style.display = '';  // keep demo visible below the live section
-    }
-
-    // ── Parse stack trace ────────────────────────────────────────────────
-    // Extracts { fn, file, line, col } from Node.js-style and generic frames.
-    function parseStackTrace(raw) {
-      const frames = [];
-      const seen = new Set();
-      const lines = raw.split('\\n');
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-
-        // Node.js style: "at functionName (path/to/file.js:42:15)"
-        // or:            "at path/to/file.js:42:15"
-        const nodeStyle = trimmed.match(
-          /^at\\s+(?:([^(]+?)\\s+\\()?([^()\\s]+?\\.(?:js|ts|mjs|cjs|jsx|tsx|py|rb|go|java|cs|cpp|c|rs|php|swift|kt)(?::[\\d]+)*)/i
-        );
-        if (nodeStyle) {
-          const fn   = (nodeStyle[1] || '').trim() || null;
-          const rest = nodeStyle[2];
-          const parts = rest.split(':');
-          // Last two numeric segments are line:col; file is everything before
-          let filePath = rest, lineNum = null, colNum = null;
-          if (parts.length >= 2 && /^\\d+$/.test(parts[parts.length - 1])) {
-            colNum = parts.pop();
-          }
-          if (parts.length >= 2 && /^\\d+$/.test(parts[parts.length - 1])) {
-            lineNum = parts.pop();
-            filePath = parts.join(':');
-          }
-          if (filePath && lineNum) {
-            // Strip leading internal paths like /app/ or /home/runner/...
-            const cleanPath = filePath.replace(/^.*?(?:src\\/|lib\\/|app\\/|home\\/[^/]+\\/[^/]+\\/)/, '').replace(/^\\//,'');
-            const key = cleanPath + ':' + lineNum;
-            if (!seen.has(key)) { seen.add(key); frames.push({ fn, file: cleanPath, rawFile: filePath, line: lineNum }); }
-          }
-          continue;
-        }
-
-        // Generic fallback: any "path/to/file.ext:NUMBER" anywhere in the line
-        const generic = trimmed.match(/([\\w./\\\\-]+\\.(?:js|ts|mjs|cjs|jsx|tsx|py|rb|go|java|cs|cpp|c|rs|php|swift|kt)):(\\d+)/i);
-        if (generic) {
-          const filePath = generic[1].replace(/^\\//,'');
-          const lineNum  = generic[2];
-          const key = filePath + ':' + lineNum;
-          if (!seen.has(key)) { seen.add(key); frames.push({ fn: null, file: filePath, rawFile: filePath, line: lineNum }); }
-        }
-      }
-      return frames;
-    }
-
-    function parseCrash() {
-      const raw = document.getElementById('crash-trace').value;
-      const out = document.getElementById('crash-frames-out');
-
-      if (!raw.trim()) {
-        out.innerHTML = '';
-        return;
-      }
-
-      const frames = parseStackTrace(raw);
-
-      if (frames.length === 0) {
-        out.innerHTML = '<p class="crash-parse-empty">No file:line references found. Paste a stack trace with frame lines like:<br><code>at functionName (/path/to/file.js:42:15)</code></p>';
-        return;
-      }
-
-      // Determine repo context: use _liveRepo if set, else try the local crash-repo-url field
-      let repoCtx = _liveRepo;
-      if (!repoCtx) {
-        const localUrl = document.getElementById('crash-repo-url').value.trim();
-        if (localUrl) {
-          const p = parseGitHubUrl(localUrl);
-          if (p) repoCtx = { owner: p.owner, repo: p.repo, branch: 'main' };
-        }
-      }
-
-      let html = '<p style="font-size:12px;color:var(--muted);margin-bottom:10px;">';
-      html += frames.length + ' frame' + (frames.length===1?'':'s') + ' found';
-      if (repoCtx) html += ' — linked to <code>' + esc(repoCtx.owner+'/'+repoCtx.repo) + '</code> @ ' + esc(repoCtx.branch);
-      else html += ' — no repo URL set, showing paths only';
-      html += '.</p>';
-
-      html += '<table><thead><tr><th>#</th><th>Function</th><th>File</th><th>Line</th></tr></thead><tbody>';
-      frames.forEach((f, i) => {
-        let fileCell;
-        if (repoCtx) {
-          const ghUrl = 'https://github.com/' + repoCtx.owner + '/' + repoCtx.repo
-            + '/blob/' + repoCtx.branch + '/' + f.file + '#L' + f.line;
-          fileCell = '<a href="' + esc(ghUrl) + '" target="_blank" rel="noopener" class="frame-file">' + esc(f.file) + '</a>';
-        } else {
-          fileCell = '<span class="frame-file">' + esc(f.file) + '</span>';
-        }
-        html += '<tr>';
-        html += '<td class="frame-num">' + (i+1) + '</td>';
-        html += '<td class="frame-fn">' + (f.fn ? esc(f.fn) : '<span style="color:var(--border)">—</span>') + '</td>';
-        html += '<td>' + fileCell + '</td>';
-        html += '<td class="frame-line">' + esc(f.line) + '</td>';
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-
-      out.innerHTML = html;
-    }
-
     // ── Enter key on URL input ───────────────────────────────────────────
     document.getElementById('gh-url').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') runLive();
-    });
-
-    // Enter key in crash repo url field
-    document.getElementById('crash-repo-url').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') parseCrash();
     });
   </script>
 
