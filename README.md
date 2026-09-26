@@ -1,146 +1,188 @@
+<p align="center">
+  <img src="docs/images/landing.png" alt="The TriRepo landing page: One repo in. Three truths out." width="880">
+</p>
+
 # TriRepo
 
-> **One repo in. Three truths out.**
+**One repo in. Three truths out.**
 
-TriRepo is a three-check clinic for one codebase.
+TriRepo checks a codebase for the three things that quietly cost teams hours: docs
+that lie about the code, crashes nobody can reproduce, and upgrades that break more
+than they should. It was built for the IBM Bob 2.0 hackathon on lablab.ai.
 
-| Check | What it finds |
-|-------|--------------|
-| **LIES** | Where docs disagree with code |
-| **CRASH** | Stack trace → failing test → fix plan |
-| **BUMP** | What breaks in THIS repo if you upgrade X |
+Each check runs **live** in your browser against any public GitHub repo, and each one
+has a **deep pass** by IBM Bob 2.0 behind it, run on `patient/`, a sample app with
+planted problems.
+
+| Check | The question | Live, on any public repo | Bob's deep pass on `patient/` |
+|-------|--------------|--------------------------|-------------------------------|
+| **LIES** | Where do the docs contradict the code? | README, CONTRIBUTING and package.json: script names, Node version, ports | 11 contradictions found, 3 fixed, 8 left documented |
+| **CRASH** | Given a stack trace, where did it fail and why? | Parses Node, Python, Java, Go and Ruby traces and opens the failing line on GitHub | Root cause found from the trace alone; failing test written, then fixed |
+| **BUMP** | What breaks in this repo if we upgrade? | Every dependency against the latest on npm, major-version gaps flagged, **Find usages** | Express 4 → 5: 4 breaks reproduced on real Express 5, 3 patched |
 
 ---
 
-## Using TriRepo in 4 steps
+## Try it
 
-1. **Open the UI** — go to `http://localhost:4000` (or the deployed URL). The landing
-   page explains the three checks; the tool itself, the clinic, is at `/app`.
-2. **Try any public GitHub repo** — paste a `https://github.com/owner/repo` URL
-   into the top bar and click **Run checks**. Everything runs in your browser,
-   with no AI and no signup:
-   - **Lies** fetches the README, CONTRIBUTING.md and package.json and checks for
-     script-name lies, wrong Node version claims, and port mismatches.
-   - **Crash**: paste a stack trace. TriRepo separates your code from dependency
-     frames, opens the failing line on GitHub, and applies simple pattern rules to
-     the error. Click **Use the patient/ crash** for a one-click example.
-   - **Bump** compares every dependency (including workspaces) with the latest
-     version on npm, flags major-version gaps, and **Find usages** lists every file
-     and line that imports a package.
-3. **See what a deep Bob analysis looks like** — click **Load demo**. This loads
-   the full IBM Bob 2.0 analysis of the `patient/` repo: 11 documentation
-   contradictions found (LIES tab), a real crash diagnosed from a stack trace
-   alone (CRASH tab), and 4 Express 5 breaking changes mapped with verified
-   reproduction output (BUMP tab).
-4. **Run it yourself locally** — see Quick Start below.
+1. **Open TriRepo.** Locally that's `http://localhost:4000` (see [Run it locally](#run-it-locally)).
+   The landing page is at `/`; the tool itself, the clinic, is at `/app`.
+2. **Paste a public GitHub repo** and click **Run checks**. Lies runs straight away and
+   Bump warms up in the background. For Crash, paste a stack trace into the Crash tab.
+3. **Read Bob's deep pass.** Click **See the Bob demo** on the landing page, or
+   **Load demo** in the clinic.
 
-> **Judges:** click **Load demo** to see the full Bob-backed analysis. The live
-> checks work on any public repo. Try them on this one:
+> **Judges:** start on the landing page, then click **See the Bob demo**. For live
+> runs, the landing page has one-click links: **Try the sample crash** and
+> **Scan this repo**. Or paste this repo into the box:
 > `https://github.com/TeevincsCrypt/TriRepo`.
 
 ---
 
-## Quick Start
+## Run it locally
 
-### 1. Run the patient app
-
-```bash
-cd patient
-npm install
-npm start
-```
-
-The patient app runs on **http://localhost:3000**.
-
-### 2. Run patient app tests
+You need Node.js 18 or newer.
 
 ```bash
-cd patient
-npm test
+npm install            # installs the UI and the patient app (npm workspaces)
+npm run ui             # TriRepo on http://localhost:4000
+npm run test:patient   # the patient app's test suite: 35 of 35 pass
 ```
 
-### 3. Run the TriRepo UI
-
-```bash
-cd app
-npm install
-npm start
-```
-
-The UI runs on **http://localhost:4000**.
+`npm run patient` starts the sample app itself on `http://localhost:3000`.
 
 ---
 
-## Project Structure
+## The three checks
+
+### Lies: docs vs code
+
+- **Live:** fetches the repo's README, CONTRIBUTING.md and package.json and flags
+  documented `npm run` scripts that don't exist, Node versions that don't match
+  `engines`, and ports that don't match `config.port` in package.json.
+- **Bob's deep pass:** two parallel subagents, one reading only the docs and one reading
+  only the code, then a diff of the two. Bob fixed the 3 safest contradictions and left
+  the other 8 documented, including two CHANGELOG errors that were never planted.
+  Report: [`reports/lies.md`](reports/lies.md).
+
+### Crash: stack trace → failing line
+
+<img src="docs/images/crash.png" alt="The live Crash tool tracing the patient crash to dateService.js" width="720">
+
+- **Live:** paste any stack trace. TriRepo separates your code from dependency and
+  runtime frames, finds each file in the repo, shows the code at the failing line, and
+  applies plain pattern rules to the error. On the sample trace it works out that
+  `terms` was undefined, and notes that the line has moved since the trace was captured.
+- **Bob's deep pass:** started from [`patient/CRASH.txt`](patient/CRASH.txt) alone,
+  traced the root cause, wrote a test that failed (red), fixed the code, and confirmed
+  green, with the full suite at 35/35. Report: [`reports/crash.md`](reports/crash.md).
+
+### Bump: upgrade blast radius
+
+<img src="docs/images/bump.png" alt="The live Bump tool listing dependencies a major version behind" width="720">
+
+- **Live:** reads package.json, following workspaces, compares every dependency with the
+  latest version on npm, and flags major-version gaps. **Find usages** lists every file
+  and line that imports a package.
+- **Bob's deep pass:** inventoried every Express call site in `patient/src`, reproduced 4
+  breaks against a real Express 5 install, patched 3 so they work on both versions, and
+  left the silent one documented. Reports: [`reports/bump.md`](reports/bump.md) and
+  [`patient/UPGRADE.md`](patient/UPGRADE.md).
+
+---
+
+## The patient
+
+[`patient/`](patient/) is **Vaultline**, a small Express 4 invoice API with 35 tests and
+problems planted on purpose: documentation that lies, one realistic crash (with a real
+captured trace in `patient/CRASH.txt`), and APIs that break on Express 5.
+
+[`patient/PLANTED.md`](patient/PLANTED.md) is the answer key. It was written only after all
+three passes, so Bob couldn't read the answers early, and it lists separately what Bob
+found that was never planted.
+
+---
+
+## How it was built
+
+Each check ran as its own IBM Bob 2.0 task, moving from Ask to Plan to Agent, with
+parallel subagents where the work split cleanly. A fresh task for each pass meant the
+later passes had no memory of what Pass 0 had planted.
+
+| Part | Built with |
+|------|-----------|
+| `patient/`: the app, its tests and the planted problems | IBM Bob 2.0 (Pass 0) |
+| The three deep analyses in `reports/` and every fix in `patient/` | IBM Bob 2.0 (Passes 1–3) |
+| `prompts/`, the docs, the original TriRepo UI and the live Lies check | IBM Bob 2.0 |
+| The live Crash and Bump tools, the landing page and the white-and-green design (`app/public/`) | Claude Code, after the Bob allowance ran out |
+
+The evidence is in [`bob_sessions/`](bob_sessions/): 13 session screenshots, grouped by
+pass. [`HACKATHON.md`](HACKATHON.md) has the full account, including exactly which files
+were written after Bob. The operator approved edits, ran commands and captured
+screenshots; no code was written by hand.
+
+---
+
+## Under the hood
+
+- **One Express server,** [`app/server.js`](app/server.js):
+  - `/` serves the landing page.
+  - `/app` serves the clinic, which renders `reports/*.md` with `marked` on every request, so there's no build step.
+  - `/api/proxy` forwards to `raw.githubusercontent.com` and `registry.npmjs.org` only, over https, when a direct browser fetch fails.
+  - `/api/sample-trace` serves `patient/CRASH.txt`.
+- **The live checks run in the visitor's browser.** Crash and Bump live in
+  [`app/public/live-tools.js`](app/public/live-tools.js); Lies is inline in
+  `server.js`. There's no database and no login, and nothing is stored.
+- **Deep links:** `/app?repo=<url>` runs the checks, `/app?tab=crash&sample=crash` traces
+  the sample crash, and `/app?tab=bump&repo=<url>` scans a repo's dependencies.
+
+### Limits of the live checks
+
+- Public GitHub repos only. Lies and Bump need an npm project with a package.json at
+  the root; Bump follows its workspaces.
+- They use GitHub's API without a login, which allows 60 requests an hour per visitor.
+  If the API is unavailable, Crash finds files by probing instead, Bump turns off Find
+  usages, and both say so.
+- Bump compares version ranges using semver rules. It doesn't know which APIs changed.
+  Find usages follows imports and direct uses of the imported name, across up to 300
+  source files.
+- Crash's pattern rules point at the failing line and the likely culprit. They don't
+  prove the root cause; that's what Bob's deep pass is for.
+
+---
+
+## Deploying
+
+Any Node host works. Deploy the whole repo, since the server reads `../reports` and
+`../patient`. Run `npm install`, then start it with `npm run ui`. The server listens on
+`$PORT` and defaults to 4000. The live demo runs on Railway.
+
+---
+
+## Project structure
 
 ```
-trirepo/
-  README.md                  ← you are here
-  LICENSE                    ← MIT
-  HACKATHON.md               ← hackathon context and judging notes
-  package.json               ← root workspace config
-  app/                       ← TriRepo UI: landing page at /, the three-tab clinic at /app
-    public/                  ← landing page, styles, live Crash + Bump tools (browser-side)
-  patient/                   ← sample app being analyzed
+TriRepo/
+  README.md                ← you are here
+  HACKATHON.md             ← the full hackathon write-up: passes, Bob features, authorship
+  LICENSE                  ← MIT
+  package.json             ← npm workspaces: app/ and patient/
+  app/
+    server.js              ← Express server: landing page, clinic, proxy
+    public/                ← landing page, styles, live Crash and Bump tools
+  patient/                 ← Vaultline, the sample app under test
+    CRASH.txt              ← the real stack trace the Crash pass started from
+    PLANTED.md             ← the answer key, written after all three passes
+    UPGRADE.md             ← Bob's Express 4 → 5 upgrade guide
   reports/
-    lies.md                  ← LIES analysis output
-    crash.md                 ← CRASH analysis output
-    bump.md                  ← BUMP analysis output
-  prompts/
-    00_bootstrap.md          ← Pass 0 bootstrap prompt
-    01_lies.md               ← Pass 1 LIES analysis prompt
-    02_crash.md              ← Pass 2 CRASH analysis prompt
-    03_bump.md               ← Pass 3 BUMP analysis prompt
-  bob_sessions/
-    README.md                ← session screenshot index
-  demo/
-    RECORDING_CHECKLIST.md   ← 3-minute demo script
+    lies.md, crash.md, bump.md   ← Bob's three deep-pass reports
+  prompts/                 ← the prompts behind each Bob pass, re-runnable
+  bob_sessions/            ← 13 screenshots of the Bob sessions, with an index
+  demo/                    ← recording checklist
+  docs/images/             ← screenshots used in this README
 ```
 
 ---
 
-## The Three Checks
+## License
 
-### LIES — Stale Documentation Detector
-
-Compares every claim in README, CONTRIBUTING, API docs, and inline comments
-against actual source code, scripts, routes, env vars, and ports.
-
-Outputs `reports/lies.md` listing each discrepancy with file + line references.
-
-### CRASH — Stack Trace to Fix
-
-Takes a real stack trace from `patient/CRASH.txt`, writes a failing test that
-reproduces it from that trace alone, traces the bug to root cause, and writes a
-targeted fix.
-
-Outputs `reports/crash.md` with: root cause, failing test, fix diff, verification steps.
-
-### BUMP — Upgrade Impact Map
-
-Given one dependency upgrade (e.g. Express 4 → 5), finds every call site in the
-patient repo that uses a changed or removed API, classifies each as breaking/warning/safe,
-and proposes the minimal migration.
-
-Outputs `reports/bump.md` with: breaking changes table, call sites, migration plan.
-
----
-
-## Patient App
-
-The patient app in `patient/` is a small but realistic Node/Express service used
-as the analysis subject. It has intentionally planted documentation issues, one
-real crash bug, and upgrade-incompatible API patterns.
-
-See `patient/README.md` for its own documentation (which contains some deliberate errors).
-
----
-
-## Built with IBM Bob 2.0
-
-All analysis reports, patient/ code fixes, tests, and documentation in this
-repository were produced by IBM Bob 2.0 during a 48-hour lablab.ai hackathon,
-along with the original TriRepo UI and its live Lies check. After the Bob usage
-allowance ran out, the live Crash and Bump tools, the landing page and the current
-visual design (`app/public/`) were added with Claude Code.
-The details are in [HACKATHON.md](HACKATHON.md#after-bob-live-crash-and-bump-tools).
+MIT. See [`LICENSE`](LICENSE).
