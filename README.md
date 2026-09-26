@@ -14,7 +14,8 @@ TriRepo is a three-check clinic for one codebase.
 
 ## Using TriRepo in 4 steps
 
-1. **Open the UI** — go to `http://localhost:4000` (or the deployed URL).
+1. **Open the UI** — go to `http://localhost:4000` (or the deployed URL). The landing
+   page explains the three checks; the tool itself, the clinic, is at `/app`.
 2. **Try any public GitHub repo** — paste a `https://github.com/owner/repo` URL
    into the top bar and click **Run checks**. Everything runs in your browser,
    with no AI and no signup:
@@ -78,8 +79,8 @@ trirepo/
   LICENSE                    ← MIT
   HACKATHON.md               ← hackathon context and judging notes
   package.json               ← root workspace config
-  app/                       ← TriRepo UI (one page, three tabs)
-    public/                  ← live Crash + Bump tools (browser-side)
+  app/                       ← TriRepo UI: landing page at /, the three-tab clinic at /app
+    public/                  ← landing page, styles, live Crash + Bump tools (browser-side)
   patient/                   ← sample app being analyzed
   reports/
     lies.md                  ← LIES analysis output
@@ -139,6 +140,7 @@ See `patient/README.md` for its own documentation (which contains some deliberat
 
 All analysis reports, patient/ code fixes, tests, and documentation in this
 repository were produced by IBM Bob 2.0 during a 48-hour lablab.ai hackathon,
-along with the TriRepo UI and its live Lies check. After the Bob usage allowance
-ran out, the live Crash and Bump tools (`app/public/`) were added with Claude Code.
+along with the original TriRepo UI and its live Lies check. After the Bob usage
+allowance ran out, the live Crash and Bump tools, the landing page and the current
+visual design (`app/public/`) were added with Claude Code.
 The details are in [HACKATHON.md](HACKATHON.md#after-bob-live-crash-and-bump-tools).

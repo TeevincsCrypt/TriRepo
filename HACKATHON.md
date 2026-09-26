@@ -51,9 +51,10 @@ IBM Bob 2.0 was the coding agent for the whole core of this project: the patient
 its tests and planted issues, all three analysis passes and their reports, every fix and
 patch in `patient/`, the prompts, the docs, the TriRepo UI and the live Lies check.
 
-> **One exception, stated plainly:** after the Bob usage allowance ran out, the live
-> Crash and Bump tools in the UI were written with Claude Code (Anthropic). They are
-> listed file by file under [After Bob: live Crash and Bump tools](#after-bob-live-crash-and-bump-tools).
+> **The exception, stated plainly:** after the Bob usage allowance ran out, the live
+> Crash and Bump tools, the landing page, and the white-and-green redesign of the UI
+> were written with Claude Code (Anthropic). They are listed file by file under
+> [After Bob: live Crash and Bump tools](#after-bob-live-crash-and-bump-tools).
 > Nothing in `reports/` or `patient/` was touched by them.
 
 ### Pass 0 — Scaffold (Plan + Agent modes)
@@ -152,8 +153,8 @@ Wrote `reports/bump.md` and `patient/UPGRADE.md`.
 The UI (`app/server.js`) is a server-rendered Express app that reads `reports/*.md`
 at request time, converts them to HTML with `marked`, and presents them in three
 tabs. Bob wrote the UI in Pass 0 and it renders the live report files with no
-rebuild step. The live Crash and Bump tools on top of it came later; see
-[After Bob](#after-bob-live-crash-and-bump-tools).
+rebuild step. The live Crash and Bump tools on top of it, the landing page and the
+current visual design came later; see [After Bob](#after-bob-live-crash-and-bump-tools).
 
 ---
 
@@ -167,7 +168,7 @@ npm install              # root workspace — installs app/ and patient/ togethe
 
 # 2. Run the TriRepo UI (port 4000)
 cd app && npm start
-# Open http://localhost:4000
+# Open http://localhost:4000 for the landing page; the three-tab tool is at /app
 
 # 3. (Optional) Run the patient app itself (port 3000)
 cd patient && npm start
@@ -231,15 +232,26 @@ could be fixed. The replacements were then written with Claude Code:
 Both tools are deterministic (no AI) and are labelled **LIVE** in the UI. Bob's deep
 passes remain the **DEMO** sections under each tab, unchanged.
 
+### Landing page and redesign
+
+Also written with Claude Code, after the tools above:
+
+| File | What it is |
+|------|-----------|
+| `app/public/landing.html`, `app/public/landing.css` | The landing page at `/`: what TriRepo is, the three checks, how the live checks and Bob's deep pass differ, and a repo box that runs the checks. Every number on it comes from Bob's reports. |
+| `app/public/site.css`, `app/public/app.css`, `app/public/favicon.svg` | The white-and-green design shared by both pages. It replaces the dark inline styles Bob wrote in Pass 0 and keeps every id and class the page's script uses. |
+| `app/server.js` (small edits) | Serves the landing page at `/` and moves the three-tab tool to `/app`, with the new navigation and footer around it. Bob's inline script, including the live Lies check, is unchanged. |
+
 ---
 
 ## Authorship Statement
 
 IBM Bob 2.0 produced all the analysis and every code change in `patient/`, plus the
-reports, prompts, docs, the TriRepo UI and the live Lies check. The live Crash and Bump
-tools (`app/public/` and the `app/server.js` edits listed above) were written with
-Claude Code after the Bob allowance ran out. The operator approved edits, ran commands
-in the terminal, and captured screenshots. No code or analysis was written by hand.
+reports, prompts, docs, the original TriRepo UI and the live Lies check. The live Crash
+and Bump tools, the landing page and the current visual design (`app/public/` and the
+`app/server.js` edits listed above) were written with Claude Code after the Bob
+allowance ran out. The operator approved edits, ran commands in the terminal, and
+captured screenshots. No code or analysis was written by hand.
 
 ---
 

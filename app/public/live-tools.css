@@ -1,179 +1,183 @@
-/* TriRepo live tools: Crash (stack trace → source) and Bump (dependency radar). */
+/* TriRepo live tools: Crash (stack trace → source) and Bump (dependency radar).
+ * Uses the tokens in site.css. */
 
 .live-tool:empty { display: none; }
 .live-tool { margin-bottom: 8px; }
 
-.lt-intro { font-size: 13px; color: var(--muted); margin: -6px 0 14px; }
-.lt-muted { color: var(--muted); }
-.lt-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+.lt-intro { margin: -6px 0 16px; color: var(--muted); font-size: 14px; }
+.lt-muted { color: var(--faint); }
+.lt-note { margin-top: 10px; color: var(--faint); font-size: 12px; }
 
 .lt-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.lt-row label { font-size: 12px; color: var(--muted); min-width: 34px; }
+.lt-row label { min-width: 36px; color: var(--muted); font-size: 13px; font-weight: 600; }
 
 .lt-input, .lt-textarea {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 11px;
   color: var(--text);
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.lt-input { flex: 1; min-width: 0; font: 13px var(--font-prose); padding: 7px 10px; }
+.lt-input { flex: 1; min-width: 0; height: 40px; padding: 0 12px; font-size: 14px; }
 .lt-textarea {
   width: 100%;
   min-height: 150px;
+  padding: 12px 14px;
   resize: vertical;
-  font: 12px/1.5 var(--font);
-  padding: 10px 12px;
-  white-space: pre;
   overflow: auto;
+  background: #fbfcfb;
+  font: 12.5px/1.55 var(--font);
+  white-space: pre;
 }
-.lt-input:focus, .lt-textarea:focus { border-color: var(--accent-active); }
-.lt-input::placeholder, .lt-textarea::placeholder { color: var(--muted); }
+.lt-input:focus, .lt-textarea:focus { border-color: var(--green-600); box-shadow: 0 0 0 4px var(--green-100); }
+.lt-input::placeholder, .lt-textarea::placeholder { color: var(--faint); }
 
-.lt-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 10px 0 16px; }
-.lt-status { font-size: 12px; color: var(--muted); }
-.lt-status.error { color: var(--accent-lies); }
-.lt-status.ok { color: var(--accent-bump); }
+.lt-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 12px 0 18px; }
+.lt-status { color: var(--muted); font-size: 13px; }
+.lt-status.error { color: var(--red-700); }
+.lt-status.ok { color: var(--green-700); font-weight: 500; }
 .lt-status code, .lt-card code, .lt-table code {
-  font-family: var(--font);
-  font-size: 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: #79c0ff;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--green-900);
+  font-size: 12.5px;
 }
 
-.btn.lt-mini { font-size: 12px; padding: 3px 10px; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn.lt-mini { height: 30px; padding: 0 11px; border-radius: 8px; font-size: 12.5px; }
 
 .lt-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 14px 16px;
   margin: 14px 0;
+  padding: 16px 18px;
+  background: #fbfcfb;
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
 .lt-card h4 {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--muted);
   margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.lt-card h4 a { color: var(--accent-active); text-transform: none; letter-spacing: 0; font-family: var(--font); }
+.lt-card h4 a { color: var(--green-700); font-family: var(--font); letter-spacing: 0; text-transform: none; }
 .lt-card p { margin: 0; }
-.lt-card a { color: var(--accent-active); text-decoration: none; }
+.lt-card a { color: var(--green-700); text-decoration: none; }
 .lt-card a:hover { text-decoration: underline; }
-.lt-error { font-family: var(--font); font-size: 13px; color: var(--accent-lies); word-break: break-word; }
-.lt-hint { border-left: 3px solid var(--accent-crash); }
+.lt-error { color: var(--red-700); font: 500 13px var(--font); word-break: break-word; }
+.lt-hint { background: var(--amber-50); border-color: #f6e3bf; border-left: 3px solid var(--amber-600); }
+.lt-hint p { color: var(--text); }
 
 .lt-tag {
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--amber-50);
+  border: 1px solid #f3d9a4;
+  color: var(--amber-700);
   font: 700 10px var(--font);
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: #2d2200;
-  color: var(--accent-crash);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
   vertical-align: middle;
 }
 
-/* Code excerpts with line numbers */
+/* Code excerpts with line numbers (dark, like the report code blocks) */
 .lt-code {
-  font: 12px/1.6 var(--font);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  margin-top: 8px;
+  padding: 6px 0;
   overflow-x: auto;
-  margin-top: 6px;
-  padding: 4px 0;
+  border-radius: 12px;
+  background: var(--code-bg);
+  font: 12.5px/1.65 var(--font);
 }
-.lt-code .ln { display: flex; white-space: pre; min-width: max-content; }
+.lt-code .ln { display: flex; min-width: max-content; white-space: pre; }
 .lt-code .ln .no {
-  flex: 0 0 52px;
-  text-align: right;
+  flex: 0 0 54px;
   padding-right: 14px;
-  color: var(--muted);
+  color: #6f8b7c;
+  text-align: right;
   text-decoration: none;
   user-select: none;
 }
-.lt-code .ln .no:hover { color: var(--accent-active); }
-.lt-code .ln .src { padding-right: 16px; color: var(--text); }
-.lt-code .ln.hit { background: rgba(248, 81, 73, 0.16); }
-.lt-code .ln.hit .no { color: var(--accent-lies); font-weight: 700; }
-.lt-code .ln.near { background: rgba(227, 179, 65, 0.12); }
-.lt-code .ln.near .no { color: var(--accent-crash); }
+.lt-code .ln .no:hover { color: var(--green-400); }
+.lt-code .ln .src { padding-right: 18px; color: var(--code-text); }
+.lt-code .ln.hit { background: rgba(248, 113, 113, 0.2); }
+.lt-code .ln.hit .no { color: #fca5a5; font-weight: 700; }
+.lt-code .ln.near { background: rgba(251, 191, 36, 0.16); }
+.lt-code .ln.near .no { color: #fcd34d; }
 
 /* Tables */
 .lt-table-wrap { overflow-x: auto; }
-.lt-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.lt-table th {
-  background: var(--bg);
+.lt-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   border: 1px solid var(--border);
-  padding: 7px 10px;
-  text-align: left;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  font-size: 13.5px;
+}
+.lt-table th {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
   color: var(--muted);
-  font-weight: 600;
   font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: left;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   white-space: nowrap;
 }
-.lt-table td { border: 1px solid var(--border); padding: 7px 10px; vertical-align: top; }
-.lt-table tr.lt-dim td { color: var(--muted); }
+.lt-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.lt-table tr:last-child td { border-bottom: 0; }
+.lt-table tr.lt-dim td { color: var(--faint); }
 .lt-table tr.lt-dim td a { color: var(--muted); }
-.lt-table tr.lt-origin td { background: rgba(248, 81, 73, 0.08); }
-.lt-table a { color: var(--accent-active); text-decoration: none; word-break: break-all; }
+.lt-table tr.lt-origin td { background: var(--red-50); }
+.lt-table a { color: var(--green-700); text-decoration: none; word-break: break-all; }
 .lt-table a:hover { text-decoration: underline; }
 
-.lt-kind { font: 600 11px var(--font); white-space: nowrap; }
+.lt-kind { font: 600 11.5px var(--font); white-space: nowrap; }
 .lt-kind-app { color: var(--text); }
-.lt-kind-dependency, .lt-kind-runtime { color: var(--muted); }
+.lt-kind-dependency, .lt-kind-runtime { color: var(--faint); }
 
 /* Version gap pills */
 .gap {
   display: inline-block;
-  font: 700 11px var(--font);
   padding: 2px 8px;
-  border-radius: 3px;
+  border-radius: 6px;
+  font: 700 11px var(--font);
   white-space: nowrap;
 }
-.gap-major { background: #3d1a1a; color: var(--accent-lies); }
-.gap-minor { background: #2d2200; color: var(--accent-crash); }
-.gap-patch { background: #1c2333; color: var(--accent-active); }
-.gap-current { background: #0d2a14; color: var(--accent-bump); }
-.gap-unknown, .gap-na { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+.gap-major { background: var(--red-50); color: var(--red-700); }
+.gap-minor { background: var(--amber-50); color: var(--amber-700); }
+.gap-patch { background: var(--slate-50); color: var(--slate-600); }
+.gap-current { background: var(--green-50); color: var(--green-700); }
+.gap-unknown, .gap-na { background: var(--surface); border: 1px solid var(--border); color: var(--faint); }
 
-.lt-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 12px; font-size: 13px; }
+.lt-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 12px; font-size: 14px; }
 .lt-summary > span:first-child { margin-right: 6px; }
 
-.lt-hit-file { font: 12px var(--font); margin: 14px 0 2px; }
-.lt-hit-file a { color: var(--accent-active); }
+.lt-hit-file { margin: 16px 0 4px; font: 12.5px var(--font); }
+.lt-hit-file a { color: var(--green-700); font-weight: 600; }
 
 .lt-divider {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 36px 0 20px;
-  color: var(--muted);
-  font-size: 12px;
+  gap: 14px;
+  margin: 40px 0 22px;
+  color: var(--faint);
+  font-size: 12.5px;
   text-align: center;
 }
-.lt-divider::before, .lt-divider::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+.lt-divider::before, .lt-divider::after { content: ''; flex: 1; border-top: 1px dashed var(--border-strong); }
 
-/* Long identifiers in the report prose should wrap instead of widening the page. */
+/* Long identifiers in the report prose wrap instead of widening the page. */
 .md-body code, .live-results code { overflow-wrap: anywhere; }
 
 @media (max-width: 640px) {
-  /* Wide report tables scroll inside their own box on small screens. */
-  .md-body table, .live-results table { display: block; overflow-x: auto; }
-  .top-bar-row { flex-wrap: wrap; }
-  #gh-url { flex-basis: 100%; }
-  .tab-bar { overflow-x: auto; padding: 0 8px; }
-  .tab-btn { padding: 12px 12px; white-space: nowrap; }
-  .tab-panel { padding: 24px 16px; }
   .lt-row { flex-wrap: wrap; }
   .lt-row label { min-width: 0; }
 }

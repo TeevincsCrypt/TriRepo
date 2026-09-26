@@ -136,7 +136,14 @@
     const url = `https://api.github.com/repos/${encodeURIComponent(repo.owner)}/` +
       `${encodeURIComponent(repo.repo)}/git/trees/${encodeURIComponent(repo.branch)}?recursive=1`;
     return cached(treeCache, url, async () => {
-      const res = await fetchRetry(url, { headers: { Accept: 'application/vnd.github+json' } });
+      let res;
+      try {
+        res = await fetchRetry(url, { headers: { Accept: 'application/vnd.github+json' } });
+      } catch (_) {
+        const err = new Error("Couldn't reach the GitHub API (api.github.com)");
+        err.network = true;
+        throw err;
+      }
       if (res.status === 403 || res.status === 429) {
         const err = new Error('GitHub API rate limit reached (60 requests an hour without login)');
         err.rateLimited = true;
@@ -170,8 +177,8 @@
         return { repo, tree: await getTree(repo) };
       } catch (err) {
         if (err.status === 404 || err.status === 409) continue; // no such branch / empty repo
-        if (!err.rateLimited) throw err;
-        // Out of API budget: confirm a branch with a raw file and carry on without the tree.
+        if (!err.rateLimited && !err.network) throw err;
+        // No API (rate limit or unreachable): confirm a branch with a raw file and carry on without the tree.
         for (const b of branches) {
           const r = { owner: parsed.owner, repo: parsed.repo, branch: b };
           for (const file of ['package.json', 'README.md']) {
@@ -195,6 +202,7 @@
       return `Couldn't find ${name} on GitHub. It may be private, misspelled, or have no main/master branch.`;
     }
     if (err.rateLimited) return `${err.message}. Try again later.`;
+    if (err.network) return `${err.message}. Check your connection and try again.`;
     return `Couldn't reach ${name} (${err.message}).`;
   }
 
@@ -288,19 +296,17 @@
     return best ? { ...best, ambiguous } : null;
   }
 
-  // Without the tree (API rate limit), probe raw URLs from the longest suffix down.
+  // Without the tree (API rate limit or unreachable), probe raw URLs for every
+  // trailing-segment suffix at once and keep the longest one that exists.
   async function probePath(repo, framePath) {
     const segs = framePath.split('/').filter((s) => s && s !== '.');
+    const candidates = [];
     for (let n = Math.min(segs.length, 6); n >= 1; n--) {
-      const candidate = segs.slice(segs.length - n).join('/');
-      try {
-        await getRaw(repo, candidate);
-        return { path: candidate, score: n, ambiguous: false };
-      } catch (err) {
-        if (err.status !== 404) return null;
-      }
+      candidates.push({ path: segs.slice(segs.length - n).join('/'), score: n });
     }
-    return null;
+    const exists = await Promise.all(candidates.map((c) => getRaw(repo, c.path).then(() => true, () => false)));
+    const i = exists.indexOf(true);
+    return i === -1 ? null : { ...candidates[i], ambiguous: candidates[i].score === 1 };
   }
 
   function findNear(lines, lineNo, re) {
@@ -440,9 +446,9 @@
       if (ctx.repo) {
         setCrashStatus(`${SPINNER}Matching frames to files in ${h(slug(ctx.repo))}…`, 'info');
         const index = ctx.tree ? buildIndex(ctx.tree.paths) : null;
-        for (const f of appFrames.slice(0, 12)) {
+        await mapPool(appFrames.slice(0, 12), 4, async (f) => {
           f.match = index ? matchPath(f.path, index) : await probePath(ctx.repo, f.path);
-        }
+        });
       }
       if (token !== crash.token) return;
 
@@ -1018,6 +1024,29 @@
     });
     hook('loadDemo', resetAll);
     renderBumpIdle();
+    applyUrlParams();
+  }
+
+  // Deep links from the landing page: /app?repo=…, ?tab=crash&sample=crash, ?tab=bump&repo=…
+  function applyUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    const repo = (params.get('repo') || '').trim();
+    const tab = params.get('tab');
+    const open = (name) => {
+      const btn = $(`tab-${name}`);
+      if (btn && typeof window.showTab === 'function') window.showTab(name, btn);
+    };
+    if (repo) $('gh-url').value = repo;
+
+    if (tab === 'bump' && repo) {
+      open('bump');
+      runBump(true);
+    } else if (repo && typeof window.runLive === 'function') {
+      window.runLive(); // runs Lies (and warms Bump), then shows the Lies tab
+    } else if (tab === 'crash' || tab === 'bump' || tab === 'lies') {
+      open(tab);
+    }
+    if (tab === 'crash' && params.get('sample') === 'crash') loadSampleCrash();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TriRepo · One repo in. Three truths out.</title>
+  <meta name="description" content="TriRepo checks a codebase for docs that lie, crashes nobody can reproduce, and upgrades that break more than they should. Built with IBM Bob 2.0.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/static/site.css">
+  <link rel="stylesheet" href="/static/landing.css">
+</head>
+<body class="landing">
+
+<main>
+  <!-- ── Hero ────────────────────────────────────────────────────────── -->
+  <div class="hero-frame">
+    <svg class="hero-rings" viewBox="0 0 1200 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="#e3ebe6" stroke-width="1">
+        <circle cx="600" cy="500" r="200"/>
+        <circle cx="600" cy="500" r="330"/>
+        <circle cx="600" cy="500" r="460"/>
+        <circle cx="600" cy="500" r="590"/>
+        <circle cx="600" cy="500" r="720"/>
+      </g>
+      <g fill="none" stroke="#22c55e" stroke-opacity="0.55" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="600" cy="500" r="460" stroke-dasharray="150 2740" transform="rotate(-20 600 500)"/>
+        <circle cx="600" cy="500" r="330" stroke-dasharray="110 1964" transform="rotate(160 600 500)"/>
+        <circle cx="600" cy="500" r="590" stroke-dasharray="170 3537" transform="rotate(204 600 500)"/>
+      </g>
+    </svg>
+
+    <div class="hero-badges" aria-hidden="true">
+      <span class="badge-float b1" title="README.md">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+      </span>
+      <span class="badge-float b2" title="package.json">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c-2 0-2 1.5-2 3v2c0 1.2-.8 2-2 2 1.2 0 2 .8 2 2v2c0 1.5 0 3 2 3M16 4c2 0 2 1.5 2 3v2c0 1.2.8 2 2 2-1.2 0-2 .8-2 2v2c0 1.5 0 3-2 3"/></svg>
+      </span>
+      <span class="badge-float b3 red" title="A doc that lies">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/></svg>
+      </span>
+      <span class="badge-float b4" title="Branches">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="7" r="2"/><path d="M6 7v10M18 9c0 5-6 4-10.5 8.5"/></svg>
+      </span>
+      <span class="badge-float b5" title="Tests passing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/></svg>
+      </span>
+      <span class="badge-float b6 amber" title="Stack trace">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V5M10 4.5 11 6.5M14 4.5 13 6.5M4 12h4M16 12h4M5 18l3-2M19 18l-3-2M5 7l3 2M19 7l-3 2"/></svg>
+      </span>
+      <span class="badge-float b7" title="Terminal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/></svg>
+      </span>
+      <span class="badge-float b8" title="Upgrade">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-9M8.5 11 12 7.5l3.5 3.5"/></svg>
+      </span>
+      <span class="badge-float b9" title="npm package">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 20 7.3v9.4l-8 4.5-8-4.5V7.3z"/><path d="M4 7.3 12 12l8-4.7M12 12v9.2"/></svg>
+      </span>
+      <span class="badge-float b10" title="Find usages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></svg>
+      </span>
+    </div>
+
+    <header class="site-nav site-nav--inset">
+      <a class="brand" href="/" aria-label="TriRepo home">
+        <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 6 6.5 20.5h15z" fill="none" stroke="#b8ead0" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="6.5" r="4.2" fill="#16a34a"/><circle cx="6.5" cy="20.5" r="4.2" fill="#0f3d24"/><circle cx="21.5" cy="20.5" r="4.2" fill="#22c55e"/></svg>
+        TriRepo
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#checks">Checks</a>
+        <a href="#how">How it works</a>
+        <a href="#evidence">Evidence</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-sm nav-github" href="https://github.com/TeevincsCrypt/TriRepo">GitHub</a>
+        <a class="btn btn-sm btn-primary" href="/app">Open TriRepo</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-chips reveal">
+        <span class="chip"><span class="chip-dot"></span>Built with IBM Bob 2.0</span>
+        <span class="chip">lablab.ai hackathon entry</span>
+      </div>
+
+      <h1 class="reveal" style="animation-delay: 60ms">One repo in.<br><span class="accent">Three truths out.</span></h1>
+
+      <p class="hero-sub reveal" style="animation-delay: 120ms">
+        TriRepo checks a codebase for the three things that quietly cost teams hours:
+        docs that lie about the code, crashes nobody can reproduce, and upgrades that
+        break more than they should.
+      </p>
+
+      <div class="hero-actions reveal" style="animation-delay: 180ms">
+        <form class="repo-form" action="/app" method="get">
+          <label class="sr-only" for="hero-repo">Public GitHub repository URL</label>
+          <input id="hero-repo" name="repo" type="text" inputmode="url" placeholder="github.com/owner/repo"
+            required autocomplete="off" spellcheck="false">
+          <button class="btn btn-primary" type="submit">Run checks</button>
+        </form>
+        <a class="btn btn-demo" href="/app">See the Bob demo</a>
+      </div>
+      <p class="hero-note reveal" style="animation-delay: 220ms">Live checks run in your browser on any public repo. No AI, no signup.</p>
+
+      <div class="finding-stack reveal" style="animation-delay: 300ms" aria-label="Three real findings from the sample repo">
+        <div class="finding f1">
+          <span class="finding-icon lies">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9.5 12.5l5 5M14.5 12.5l-5 5"/></svg>
+          </span>
+          <div>
+            <p class="finding-title"><b>Lies</b>README documents <code>/api/v2/invoices</code></p>
+            <p class="finding-meta">The server mounts <code>/api/v1</code> · patient/src/config.js:4</p>
+          </div>
+        </div>
+        <div class="finding f2">
+          <span class="finding-icon crash">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V5M4 12h4M16 12h4M5 18l3-2M19 18l-3-2M5 7l3 2M19 7l-3 2"/></svg>
+          </span>
+          <div>
+            <p class="finding-title"><b>Crash</b><code>terms</code> was undefined</p>
+            <p class="finding-meta">TypeError at dateService.js:39 · red → green</p>
+          </div>
+        </div>
+        <div class="finding f3">
+          <span class="finding-icon bump">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-9M8.5 11 12 7.5l3.5 3.5"/></svg>
+          </span>
+          <div>
+            <p class="finding-title"><b>Bump</b>Express 4 → 5</p>
+            <p class="finding-meta">4 breaks reproduced · 3 patched</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" id="evidence">
+      <p class="proof-label">What IBM Bob found in <code>patient/</code>, the sample repo</p>
+      <ul class="proof-stats">
+        <li><strong>11</strong><span>doc contradictions</span></li>
+        <li><strong>1</strong><span>crash, red → green</span></li>
+        <li><strong>4</strong><span>Express 5 breaks reproduced</span></li>
+        <li><strong>35/35</strong><span>tests passing</span></li>
+        <li><strong>13</strong><span>session screenshots</span></li>
+      </ul>
+      <a class="proof-link" href="https://github.com/TeevincsCrypt/TriRepo/tree/main/bob_sessions">See every Bob session →</a>
+    </section>
+  </div>
+
+  <!-- ── The three checks ────────────────────────────────────────────── -->
+  <section class="section" id="checks">
+    <div class="section-head">
+      <p class="eyebrow">Three checks</p>
+      <h2>Three ways a repo drifts away from the truth</h2>
+      <p>Each check runs live against any public repo, and each one has a deep pass by IBM Bob behind it.</p>
+    </div>
+
+    <div class="check-grid">
+      <article class="check-card">
+        <span class="check-tag lies">LIES</span>
+        <h3>Docs vs code</h3>
+        <p>Finds the places where the README and contributing guide say one thing and the code does another: script names, ports, Node versions, routes and paths.</p>
+        <dl class="check-modes">
+          <div><dt>Live</dt><dd>README, CONTRIBUTING and package.json of any public repo</dd></div>
+          <div><dt>Bob deep pass</dt><dd>11 contradictions in patient/, 3 fixed, 8 left documented</dd></div>
+        </dl>
+        <a class="check-link" href="/app?tab=lies">Open Lies <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="check-card">
+        <span class="check-tag crash">CRASH</span>
+        <h3>Stack trace → failing line</h3>
+        <p>Paste a stack trace. TriRepo separates your code from dependency frames, finds each file in the repo, and shows the code where it failed.</p>
+        <dl class="check-modes">
+          <div><dt>Live</dt><dd>Node, Python, Java, Go and Ruby traces, linked to GitHub lines</dd></div>
+          <div><dt>Bob deep pass</dt><dd>Root cause found from the trace alone, failing test written, fixed</dd></div>
+        </dl>
+        <a class="check-link" href="/app?tab=crash&amp;sample=crash">Try the sample crash <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="check-card">
+        <span class="check-tag bump">BUMP</span>
+        <h3>Upgrade blast radius</h3>
+        <p>Compares every dependency with the latest version on npm, flags major-version gaps, and finds every file that imports them.</p>
+        <dl class="check-modes">
+          <div><dt>Live</dt><dd>package.json and workspaces of any public npm project</dd></div>
+          <div><dt>Bob deep pass</dt><dd>Express 4 → 5: 4 breaks reproduced on real Express 5, 3 patched</dd></div>
+        </dl>
+        <a class="check-link" href="/app?tab=bump&amp;repo=https%3A%2F%2Fgithub.com%2FTeevincsCrypt%2FTriRepo">Scan this repo <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── How it works ────────────────────────────────────────────────── -->
+  <section class="section" id="how">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>Instant live checks, and a deep pass by IBM Bob</h2>
+    </div>
+
+    <div class="how-grid">
+      <article class="how-card">
+        <p class="how-kicker">Live · in your browser</p>
+        <h3>Seconds, on any public repo</h3>
+        <p>Fast, deterministic checks that talk straight to GitHub and npm from your browser.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>No signup, no install, nothing stored</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>No AI: plain rules, and every finding shows the file and line it came from</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Honest about limits: if it can't check something, it says so</li>
+        </ul>
+      </article>
+
+      <article class="how-card deep">
+        <p class="how-kicker">Deep · IBM Bob 2.0</p>
+        <h3>The whole repo, verified</h3>
+        <p>Bob ran each check as its own task on <code>patient/</code>, a sample invoice API with planted problems.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Reads the code and the docs together, with full-repo context</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Ask → Plan → Agent, with parallel subagents</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Proves a problem before claiming it: a red test, a real Express 5 crash</li>
+        </ul>
+        <a class="how-link" href="https://github.com/TeevincsCrypt/TriRepo/tree/main/bob_sessions">See the 13 session screenshots →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── Call to action ──────────────────────────────────────────────── -->
+  <section class="cta">
+    <div class="cta-inner">
+      <h2>Check a repo now</h2>
+      <p>Paste any public GitHub repo. Lies and Bump run straight away; Crash is ready when you paste a trace.</p>
+      <div class="hero-actions">
+        <form class="repo-form" action="/app" method="get">
+          <label class="sr-only" for="cta-repo">Public GitHub repository URL</label>
+          <input id="cta-repo" name="repo" type="text" inputmode="url" placeholder="github.com/owner/repo"
+            required autocomplete="off" spellcheck="false">
+          <button class="btn btn-primary" type="submit">Run checks</button>
+        </form>
+        <a class="btn btn-demo" href="/app">See the Bob demo</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a class="brand" href="/" aria-label="TriRepo home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 6 6.5 20.5h15z" fill="none" stroke="#b8ead0" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="6.5" r="4.2" fill="#16a34a"/><circle cx="6.5" cy="20.5" r="4.2" fill="#0f3d24"/><circle cx="21.5" cy="20.5" r="4.2" fill="#22c55e"/></svg>
+      TriRepo
+    </a>
+    <div class="footer-links">
+      <a href="https://github.com/TeevincsCrypt/TriRepo">GitHub</a>
+      <a href="https://github.com/TeevincsCrypt/TriRepo/blob/main/HACKATHON.md">HACKATHON.md</a>
+      <a href="https://github.com/TeevincsCrypt/TriRepo/tree/main/bob_sessions">Bob sessions</a>
+      <a href="/app">Open TriRepo</a>
+    </div>
+  </div>
+  <p class="credit">
+    IBM Bob 2.0 built the sample app, all three deep analyses and the original TriRepo UI.
+    The live Crash and Bump tools and this design were added with Claude Code after the Bob
+    allowance ran out. Details in <a href="https://github.com/TeevincsCrypt/TriRepo/blob/main/HACKATHON.md#after-bob-live-crash-and-bump-tools">HACKATHON.md</a>.
+  </p>
+</footer>
+
+</body>
+</html>

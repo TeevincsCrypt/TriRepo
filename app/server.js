@@ -67,8 +67,13 @@ app.get('/api/sample-trace', (req, res) => {
   });
 });
 
-// ── Main page ─────────────────────────────────────────────────────────────────
+// ── Landing page ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'landing.html'));
+});
+
+// ── The clinic (three tabs) ───────────────────────────────────────────────────
+app.get('/app', (req, res) => {
   const lies = readReport('lies');
   const crash = readReport('crash');
   const bump = readReport('bump');
@@ -78,253 +83,56 @@ app.get('/', (req, res) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TriRepo</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --border: #30363d;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --accent-lies: #f85149;
-      --accent-crash: #e3b341;
-      --accent-bump: #3fb950;
-      --accent-active: #58a6ff;
-      --font: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-      --font-prose: -apple-system, 'Segoe UI', system-ui, sans-serif;
-    }
-
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-prose); font-size: 14px; line-height: 1.6; }
-
-    /* ── Top bar ─────────────────────────────────────────── */
-    .top-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-    }
-    .top-bar-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .top-bar-row .logo { font-family: var(--font); font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; white-space: nowrap; }
-    .top-bar-row .logo span { color: var(--accent-active); }
-    #gh-url {
-      flex: 1;
-      min-width: 0;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      font-family: var(--font-prose);
-      font-size: 13px;
-      padding: 7px 10px;
-      outline: none;
-    }
-    #gh-url:focus { border-color: var(--accent-active); }
-    #gh-url::placeholder { color: var(--muted); }
-    .btn {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      font-family: var(--font-prose);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 7px 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .btn:hover { border-color: var(--accent-active); color: var(--accent-active); }
-    .btn-primary { background: var(--accent-active); border-color: var(--accent-active); color: #0d1117; font-weight: 600; }
-    .btn-primary:hover { background: #79b8ff; border-color: #79b8ff; color: #0d1117; }
-    .btn-primary:disabled { background: var(--border); border-color: var(--border); color: var(--muted); cursor: not-allowed; }
-    .top-bar-hint {
-      max-width: 900px;
-      margin: 8px auto 0;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .top-bar-hint a { color: var(--muted); text-decoration: underline; }
-
-    /* ── Status bar ──────────────────────────────────────── */
-    #status-bar {
-      max-width: 900px;
-      margin: 10px auto 0;
-      font-size: 12px;
-      min-height: 18px;
-      display: none;
-    }
-    #status-bar.visible { display: block; }
-    #status-bar.error { color: var(--accent-lies); }
-    #status-bar.info  { color: var(--muted); }
-    #status-bar.ok    { color: var(--accent-bump); }
-
-    /* ── Header ─────────────────────────────────────────── */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 6px 24px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-    header .tagline { font-size: 11px; color: var(--muted); }
-
-    /* ── Mode badge ──────────────────────────────────────── */
-    .mode-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font);
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 4px;
-      font-weight: 700;
-      margin-right: 10px;
-    }
-    .mode-badge.demo { background: #1c2333; color: var(--accent-active); border: 1px solid #30363d; }
-    .mode-badge.live { background: #0d2a14; color: var(--accent-bump); border: 1px solid #1e4620; }
-
-    /* ── Tabs ────────────────────────────────────────────── */
-    .tab-bar {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-      padding: 0 24px;
-    }
-    .tab-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: var(--font-prose);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 12px 20px;
-      border-bottom: 2px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: color 0.15s;
-    }
-    .tab-btn:hover { color: var(--text); }
-    .tab-btn.active { color: var(--text); border-bottom-color: var(--accent-active); }
-    .tab-btn .badge { font-family: var(--font); font-size: 11px; padding: 2px 6px; border-radius: 3px; font-weight: 700; }
-    .tab-btn.lies-tab .badge { background: #3d1a1a; color: var(--accent-lies); }
-    .tab-btn.crash-tab .badge { background: #2d2200; color: var(--accent-crash); }
-    .tab-btn.bump-tab .badge { background: #0d2a14; color: var(--accent-bump); }
-
-    /* ── Content ─────────────────────────────────────────── */
-    .tab-panel { display: none; padding: 32px 24px; max-width: 900px; margin: 0 auto; }
-    .tab-panel.active { display: block; }
-
-    /* ── Source label ────────────────────────────────────── */
-    .source-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      padding: 8px 12px;
-      border-radius: 5px;
-      font-size: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-    }
-    .source-label.demo-label { border-left: 3px solid var(--accent-active); }
-    .source-label.live-label { border-left: 3px solid var(--accent-bump); }
-    .source-label strong { font-size: 11px; font-family: var(--font); font-weight: 700; }
-    .source-label.demo-label strong { color: var(--accent-active); }
-    .source-label.live-label strong { color: var(--accent-bump); }
-    .source-label span { color: var(--muted); }
-
-    /* ── Markdown styles ─────────────────────────────────── */
-    .md-body h1 { font-size: 22px; font-weight: 700; margin-bottom: 16px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-    .md-body h2 { font-size: 17px; font-weight: 600; margin: 28px 0 10px; color: var(--text); }
-    .md-body h3 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .md-body p { margin-bottom: 12px; color: var(--text); }
-    .md-body blockquote { border-left: 3px solid var(--accent-active); padding: 8px 16px; margin: 16px 0; background: var(--surface); border-radius: 0 4px 4px 0; }
-    .md-body blockquote p { color: var(--muted); margin: 0; }
-    .md-body code { font-family: var(--font); font-size: 12px; background: var(--surface); border: 1px solid var(--border); padding: 2px 5px; border-radius: 3px; color: #79c0ff; }
-    .md-body pre { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; margin: 16px 0; }
-    .md-body pre code { background: none; border: none; padding: 0; color: #e6edf3; font-size: 12px; }
-    .md-body table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
-    .md-body th { background: var(--surface); border: 1px solid var(--border); padding: 8px 12px; text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .md-body td { border: 1px solid var(--border); padding: 8px 12px; }
-    .md-body tr:hover td { background: rgba(88,166,255,0.04); }
-    .md-body ul, .md-body ol { margin: 8px 0 12px 20px; }
-    .md-body li { margin-bottom: 4px; }
-    .md-body a { color: var(--accent-active); text-decoration: none; }
-    .md-body a:hover { text-decoration: underline; }
-    .md-body hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-    .md-body strong { color: var(--text); font-weight: 600; }
-
-    .empty { color: var(--muted); font-style: italic; text-align: center; padding: 40px 0; }
-
-    /* ── Live results table ───────────────────────────────── */
-    .live-results { margin-top: 4px; }
-    .live-results table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13px; }
-    .live-results th { background: var(--surface); border: 1px solid var(--border); padding: 8px 12px; text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .live-results td { border: 1px solid var(--border); padding: 8px 12px; vertical-align: top; }
-    .live-results tr:hover td { background: rgba(88,166,255,0.04); }
-    .live-results code { font-family: var(--font); font-size: 12px; background: var(--surface); border: 1px solid var(--border); padding: 2px 5px; border-radius: 3px; color: #79c0ff; }
-    .verdict-lie { color: var(--accent-lies); font-weight: 700; font-family: var(--font); font-size: 11px; }
-    .verdict-ok  { color: var(--accent-bump); font-weight: 700; font-family: var(--font); font-size: 11px; }
-    .verdict-skip { color: var(--muted); font-family: var(--font); font-size: 11px; }
-
-    .no-findings { padding: 20px 0; color: var(--accent-bump); font-size: 13px; }
-    .no-findings::before { content: "✓ "; }
-
-    .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--accent-active); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Tab accent stripe ───────────────────────────────── */
-    .tab-panel.lies-panel { border-top: 3px solid var(--accent-lies); }
-    .tab-panel.crash-panel { border-top: 3px solid var(--accent-crash); }
-    .tab-panel.bump-panel { border-top: 3px solid var(--accent-bump); }
-
-    /* ── Footer ──────────────────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--muted);
-      font-size: 11px;
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
-    }
-  </style>
+  <title>TriRepo · Clinic</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="/static/site.css">
+  <link rel="stylesheet" href="/static/app.css">
   <link rel="stylesheet" href="/static/live-tools.css">
 </head>
-<body>
+<body class="app-page">
 
-  <!-- ── Top bar ──────────────────────────────────────────────────────── -->
-  <div class="top-bar">
-    <div class="top-bar-row">
-      <div class="logo">Tri<span>Repo</span></div>
-      <input id="gh-url" type="url" placeholder="https://github.com/owner/repo — public repos only" autocomplete="off" spellcheck="false" />
-      <button class="btn btn-primary" id="run-btn" onclick="runLive()">Run checks</button>
-      <button class="btn" onclick="loadDemo()">Load demo</button>
+  <!-- ── Navigation ───────────────────────────────────────────────────── -->
+  <header class="site-nav">
+    <a class="brand" href="/" aria-label="TriRepo home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 6 6.5 20.5h15z" fill="none" stroke="#b8ead0" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="6.5" r="4.2" fill="#16a34a"/><circle cx="6.5" cy="20.5" r="4.2" fill="#0f3d24"/><circle cx="21.5" cy="20.5" r="4.2" fill="#22c55e"/></svg>
+      TriRepo
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/#checks">Checks</a>
+      <a href="/#how">How it works</a>
+      <a href="https://github.com/TeevincsCrypt/TriRepo/tree/main/bob_sessions">Evidence</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-sm" href="https://github.com/TeevincsCrypt/TriRepo">GitHub</a>
     </div>
-    <p class="top-bar-hint">
-      Live checks run in your browser, no AI: Lies compares README + package.json, Crash turns a pasted stack trace into the failing line,
-      Bump flags dependencies a major version behind and finds where they're used.
-      The deep analysis of patient/ is IBM Bob. See <a href="#" onclick="loadDemo();return false;">Load demo</a>.
-    </p>
-    <div id="status-bar"></div>
-  </div>
-
-  <!-- ── Sub-header ───────────────────────────────────────────────────── -->
-  <header>
-    <div class="tagline">one repo in · three truths out</div>
   </header>
 
+  <main class="app-shell">
+    <div class="app-intro">
+      <h1>The clinic</h1>
+      <p>Check any public GitHub repo live, or read IBM Bob's deep pass on <code>patient/</code>.</p>
+    </div>
+
+    <!-- ── Repo bar (ids used by the page script) ─────────────────────── -->
+    <div class="top-bar">
+      <div class="top-bar-row">
+        <input id="gh-url" type="url" placeholder="https://github.com/owner/repo (public repos only)" autocomplete="off" spellcheck="false" />
+        <button class="btn btn-primary" id="run-btn" onclick="runLive()">Run checks</button>
+        <button class="btn" onclick="loadDemo()">Load demo</button>
+      </div>
+      <p class="top-bar-hint">
+        Live checks run in your browser, no AI: Lies compares README + package.json, Crash turns a pasted stack trace into the failing line,
+        Bump flags dependencies a major version behind and finds where they're used.
+        The deep analysis of patient/ is IBM Bob. See <a href="#" onclick="loadDemo();return false;">Load demo</a>.
+      </p>
+      <div id="status-bar"></div>
+    </div>
+
   <!-- ── Tabs ─────────────────────────────────────────────────────────── -->
-  <nav class="tab-bar">
+  <nav class="tab-bar" aria-label="Checks">
     <button class="tab-btn lies-tab active" id="tab-lies" onclick="showTab('lies', this)">
       <span class="badge">LIES</span> Documentation vs Code
     </button>
@@ -369,9 +177,25 @@ app.get('/', (req, res) => {
     <div class="md-body">${bump}</div>
   </div>
 
-  <footer>
-    Deep analysis of patient/ and every patient/ code change: IBM Bob 2.0 ·
-    Live Crash and Bump tools: added with Claude Code after the Bob allowance ran out (see HACKATHON.md)
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a class="brand" href="/" aria-label="TriRepo home">
+        <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 6 6.5 20.5h15z" fill="none" stroke="#b8ead0" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="6.5" r="4.2" fill="#16a34a"/><circle cx="6.5" cy="20.5" r="4.2" fill="#0f3d24"/><circle cx="21.5" cy="20.5" r="4.2" fill="#22c55e"/></svg>
+        TriRepo
+      </a>
+      <div class="footer-links">
+        <a href="https://github.com/TeevincsCrypt/TriRepo">GitHub</a>
+        <a href="https://github.com/TeevincsCrypt/TriRepo/blob/main/HACKATHON.md">HACKATHON.md</a>
+        <a href="https://github.com/TeevincsCrypt/TriRepo/tree/main/bob_sessions">Bob sessions</a>
+      </div>
+    </div>
+    <p class="credit">
+      Deep analysis of patient/ and every patient/ code change: IBM Bob 2.0.
+      The live Crash and Bump tools and this design were added with Claude Code after the Bob allowance ran out
+      (see <a href="https://github.com/TeevincsCrypt/TriRepo/blob/main/HACKATHON.md#after-bob-live-crash-and-bump-tools">HACKATHON.md</a>).
+    </p>
   </footer>
 
   <script>
